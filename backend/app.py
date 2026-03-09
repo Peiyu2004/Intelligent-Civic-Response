@@ -56,17 +56,9 @@ def report_issue():
     })
 
 # save reports to database
-from database import get_connection
+from database import init_db
 
-conn = get_connection()
-
-conn.execute(
-    "INSERT INTO reports (image_path, description, damage_type, severity_score) VALUES (?, ?, ?, ?)",
-    (filepath, description, ai_result["damage_type"], ai_result["severity_score"])
-)
-
-conn.commit()
-conn.close()
+init_db()
 
 # create dashboard api
 @app.route("/reports", methods=["GET"])
