@@ -1,6 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { User } from "lucide-react";
+import {
+  User,
+  Facebook,
+  Instagram,
+  Youtube,
+  Twitter,
+  MessagesSquare,
+} from "lucide-react";
 
 export const AdminPage: React.FC = () => {
   const navigate = useNavigate();
@@ -47,8 +54,9 @@ export const AdminPage: React.FC = () => {
       <div className="relative flex justify-center pt-6 mt-10 ">
         <div className="w-[85%] bg-white/70 backdrop-blur-md rounded-full px-6 py-5 flex justify-between items-center">
           {/* Logo */}
-          <div className="text-gray-800 font-medium text-3xl flex items-center gap-2">
-            💬 CiviScan
+          <div className=" flex items-center gap-2">
+            <MessagesSquare className="w-10 h-10 ml-2" />
+            <span className="text-gray-800 font-medium text-3xl">CiviScan</span>
           </div>
 
           {/* Right side */}
@@ -117,14 +125,22 @@ export const AdminPage: React.FC = () => {
 
       {/* Footer */}
       <div className="relative flex justify-between text-white text-xl px-10 py-6">
-        <div>💬 CiviScan</div>
+        <div className=" flex items-center gap-2">
+          <MessagesSquare className="w-10 h-10 ml-2" />
+          <span className="text-white-800 font-medium text-3xl">CiviScan</span>
+        </div>
 
-        <div className="text-center">
+        <div className="text-center text-3xl">
           <p>About Us</p>
           <p>Home | Terms | Privacy | Contact</p>
         </div>
 
-        <div>Social Media</div>
+        <div className=" flex items-center gap-2">
+          <Instagram className="w-10 h-10 ml-2" />
+          <Facebook className="w-10 h-10 ml-2" />
+          <Twitter className="w-10 h-10 ml-2" />
+          <Youtube className="w-10 h-10 ml-2" />
+        </div>
       </div>
     </div>
   );

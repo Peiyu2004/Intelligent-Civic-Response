@@ -2,7 +2,13 @@ import { Bell, Settings, User } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Header: React.FC = () => {
+import { Menu } from "lucide-react";
+
+interface HeaderProps {
+  toggleSidebar: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const [showCard, setShowCard] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -29,10 +35,14 @@ export const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className="w-full bg-white shadow-md border-b border-gray-200 sticky top-0 z-50 p-3 ">
+    <header className="fixed top-0 left-0 w-full bg-white shadow-md border-b border-gray-200 z-50">
       <div className="w-full px-6 py-4 flex justify-between items-center">
+        {/* Mobile Hamburger */}
+        <button onClick={toggleSidebar} className="md:hidden">
+          <Menu size={28} />
+        </button>
         {/* Logo */}
-        <h1 className="text-3xl font-bold text-gray-900 tracking-wide">
+        <h1 className="text-2xl font-bold text-gray-900 tracking-wide">
           CiviScan
         </h1>
 
