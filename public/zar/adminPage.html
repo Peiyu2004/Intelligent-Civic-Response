@@ -2,48 +2,62 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <title>CiviScan</title>
+
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="reset-page">
-    <div class="page">
-      <!-- Navbar -->
-      <div class="navbar">
-        <div class="logo">
-          <img src="images/civiscan.png" alt="klcc" width="32" height="30" />
-          CiviScan
-        </div>
-        <button class="btn" onclick="location.href = 'homePage.html'">
-          Home
-        </button>
+
+  <body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+      <div class="logo">
+        <img
+          src="images/civiscan.png"
+          alt="klcc"
+          width="32"
+          height="30"
+        />CiviScan
       </div>
 
-      <!-- Glass Card -->
-      <div class="card">
-        <div class="form-row">
-          <label>Email:</label>
-          <input type="text" />
-          <button class="small-btn">Send Code</button>
-        </div>
-
-        <div class="form-row">
-          <label>OTP:</label>
-          <input type="text" />
-        </div>
-
-        <div class="form-row">
-          <label>New Password:</label>
-          <input type="text" />
-        </div>
-
-        <div class="right">
-          <button class="login-btn" onclick="location.href = 'login.html'">
-            Re-login
+      <div class="top-right">
+        <!-- Container for hover popup -->
+        <div class="hover-container">
+          <button class="btn user-btn">
+            <img src="images/user.png" alt="user" width="20" height="20" />
+            ADMIN
           </button>
+
+          <!-- Popup with iframe -->
+          <div class="popup">
+            <iframe
+              src="adminLogout.html"
+              width="300"
+              height="200"
+              frameborder="0"
+            ></iframe>
+          </div>
         </div>
+        <button class="btn" onclick="location.href = '/dashboard'">
+          Get started
+        </button>
       </div>
     </div>
 
+    <!-- HERO SECTION -->
+
+    <div class="hero">
+      <h1>INTELLIGENT</h1>
+      <h2>CIVIC RESPONSE</h2>
+
+      <p>Report infrastructure issues to help to<br />improve the city</p>
+
+      <button class="start-btn" onclick="location.href = '/dashboard'">
+        Get started
+      </button>
+    </div>
+
     <!-- FOOTER -->
+
     <footer style="background: rgba(0, 0, 0, 0.4); color: white; padding: 20px">
       <div class="footer-left">
         <img src="images/civiscan.png" alt="klcc" width="32" height="30" />

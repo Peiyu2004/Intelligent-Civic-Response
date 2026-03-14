@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { Dashboard } from "./pages/Dashboard.tsx";
 import { ReportList } from "./pages/ReportList.tsx";
-import { AdminPage } from "./pages/AdminPage.tsx";
+// import { AdminPage } from "./pages/AdminPage.tsx";
 import "./index.css";
 
 function RedirectToHome() {
@@ -22,12 +22,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route
-          path="/"
-          element={<Navigate to="/zar/homePage.html" replace />}
-        /> */}
         <Route path="/" element={<RedirectToHome />} />
-        <Route path="/admin" element={<AdminPage />} />
+        {/* <Route path="/admin" element={<AdminPage />} /> */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/report-list" element={<ReportList />} />
       </Routes>

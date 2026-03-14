@@ -1,4 +1,4 @@
-import { Bell, Settings, User } from "lucide-react";
+import { Bell, Settings, CircleUserRound } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = () => {
-    navigate("/home");
+    window.location.href = "/zar/homePage.html";
   };
 
   useEffect(() => {
@@ -55,13 +55,13 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
               onClick={() => setShowCard(!showCard)}
               className="flex items-center gap-2 bg-gray-100 px-4 py-4 rounded-full cursor-pointer hover:bg-gray-200 transition"
             >
-              <User className="w-7 h-7 text-gray-700" />
+              <CircleUserRound className="w-7 h-7 text-gray-700" />
               <span className="text-gray-700 font-medium">ADMIN</span>
             </div>
             {/* Dropdown */}
             {showCard && (
               <div className="absolute top-14 right-0 bg-white rounded-xl shadow-lg w-60 p-6 text-center">
-                <User className="w-10 h-10 mx-auto text-gray-600 mb-2" />
+                <CircleUserRound className="w-20 h-20 mx-auto text-gray-600 mb-2" />
                 <p className="font-semibold mb-3">ADMIN</p>
                 <div className="flex flex-row">
                   <button className="border-2 rounded-full px-3 py-1 text-sm mr-2">
