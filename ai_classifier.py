@@ -1,16 +1,10 @@
-# ── OPTION A: Google Gemini (current) — uncomment if FlexToken = Gemini ──
-from google import genai
-from google.genai import types
-
-# ── OPTION B: OpenAI — uncomment if FlexToken = OpenAI ───────────────────
-# from openai import OpenAI
-
-# ── OPTION C: Anthropic — uncomment if FlexToken = Anthropic ─────────────
-# import anthropic
+import requests
+import base64
 import json
 from pathlib import Path
 
-API_KEY = "test"
+API_KEY = "sk-ZriJfUkoMrCewClKw62lAQ"
+API_URL = "https://aiworkshopapi.flexinfra.com.my/v1/chat/completions"
 
 #prompt
 DAMAGE_PROMPT = """You are a municipal infrastructure damage assessment AI working for a city government in Malaysia.
@@ -27,121 +21,90 @@ STRICT OUTPUT RULES — YOU MUST FOLLOW THESE:
 ====================
 STEP 1 — IDENTIFY DAMAGE CATEGORY
 ====================
-Choose the CLOSEST matching category based on what you see in the photo.
-Read each description carefully before deciding. If two categories seem possible, pick the one that matches the MOST VISIBLE damage in the photo.
+Choose the CLOSEST matching category based on what you see in the photo:
 
 - pothole
-  = A hole or depression punched into the road surface, exposing the layers underneath.
-  = Common in Malaysian roads after heavy rain weakens the asphalt base.
-  = Look for: circular or irregular-shaped hole, crumbling or broken asphalt edges around the hole, exposed gravel or soil underneath, water pooling inside the hole.
-  = Do NOT use for surface cracks without a hole (use cracked_pavement instead).
-  = Severity guide:
-      1–3 = Small hole under 5cm wide at the road edge, vehicles can easily avoid it
-      4–6 = Medium hole 5–15cm wide on a residential or side road
-      7–8 = Large hole over 15cm wide or deeper than 5cm, hard to avoid
-      9–10 = Massive hole over 30cm wide, on a highway or main road, or multiple potholes in one area
-
-- broken_streetlight
-  = A street lamp or light pole that is visibly damaged and no longer functioning properly or safely.
-  = Especially dangerous at night when it leaves roads completely dark.
-  = Look for: bent or leaning pole, shattered lamp cover or bulb, light that is off in a normally lit area, pole that has fallen onto the road or pavement, burn marks or damage at the base.
-  = Severity guide:
-      1–3 = Light flickering or slightly tilted but still mostly working
-      4–6 = Light visibly damaged, bulb broken, but pole still standing upright
-      7–8 = Pole completely fallen or light unit fully destroyed, area is dark
-      9–10 = Fallen pole blocking road OR exposed electrical wires visible — electrocution risk
-
+  = A hole or depression that goes THROUGH the road surface, exposing the layers underneath.
+  = Look for: circular or irregular hole, crumbling edges, exposed gravel or soil at the bottom, water pooling INSIDE the hole.
+  = Do NOT use if the surface is cracked but still flat and connected — use cracked_pavement instead.
+- broken_streetlight  = A street light that is visibly damaged, leaning, has broken glass, missing bulb cover, or has fallen over. Look for: bent pole, shattered lamp, dark unlit area at night.
 - cracked_pavement
-  = Visible splitting, fracturing or breaking of the road or walkway surface without a hole forming.
-  = Look for: straight or branching line cracks across the surface, spider web or star-shaped crack patterns, sections of pavement that are raised, sunken or uneven, broken edges along the road.
-  = Do NOT use if there is an actual hole (use pothole instead).
-  = Severity guide:
-      1–3 = Hairline crack under 1cm wide, surface still smooth and safe to walk or drive on
-      4–6 = Crack wider than 1cm, raised edges that could cause trips or tyre damage
-      7–8 = Large crack spanning the full width of pavement or road, severe uneven surface
-      9–10 = Fully collapsed or sunken road section, structural failure visible
-
-- flooded_drain
-  = A blocked or overflowing drain that is causing water to pool or flood the surrounding road or walkway.
-  = Very common in Malaysia during and after heavy rain.
-  = Look for: standing or flowing water on road surface, drain grates blocked with leaves, mud or rubbish, submerged road markings or curbs, water flowing onto pedestrian areas.
-  = Severity guide:
-      1–3 = Minor water pooling only at the drain itself, road still passable
-      4–6 = Partial blockage, water spreading onto road edge but one lane still clear
-      7–8 = Flooding covers most of the road surface, vehicles slowing down or diverting
-      9–10 = Entire road blocked by floodwater, completely impassable, risk of vehicles being swept
-
+  = Use this for ANY road or pavement surface that is cracked, split, broken or fractured — including serious and severe cracks.
+  = This includes: small hairline cracks, wide cracks, deep cracks, spider web cracks, raised or sunken slabs, severely broken asphalt that has not yet formed a hole.
+  = USE cracked_pavement even when cracks are very serious, very wide, or very deep — as long as the surface is still present and connected, it is cracked_pavement NOT pothole.
+  = Look for: irregular jagged lines, random crack directions, uneven widths, broken edges, pieces breaking off but still on the surface.
+  = Do NOT use for brick or cobblestone roads — straight uniform lines between bricks are joints, not cracks.
+  = Do NOT use for broken or damaged road dividers, bollards or barriers — those are metal/concrete structures, not pavement → use other instead.
+  = KEY RULE: If the road surface is still there but broken → cracked_pavement. Only use pothole if there is a physical hole where material is completely gone.
+- flooded_drain       = Blocked drainage causing water to pool or flood on road or walkway. Look for: standing water, blocked drain grates, submerged road markings.
 - fallen_sign
-  = A road sign, traffic sign or directional sign that is no longer standing properly and cannot be clearly read by drivers or pedestrians.
-  = Look for: sign lying flat on the ground, post snapped or bent at the base, sign face missing or turned the wrong way, sign that is completely unreadable from a normal driving distance.
+  = A traffic sign, road sign or directional signage that is fallen, bent, missing or unreadable.
+  = Look for: sign lying on ground, bent post, blank/missing sign face.
   = Severity guide:
-      1–3 = Sign slightly tilted but text still fully readable by drivers
-      4–6 = Sign leaning badly or partially fallen, text only partly visible
-      7–8 = Sign completely fallen or missing on a main road or busy junction
-      9–10 = Critical safety sign (stop sign, junction warning, speed limit) missing at a dangerous location
-
-- worn_road_marking
-  = Road surface paint or markings that have faded or worn away so much that they are no longer clearly visible.
-  = The road surface underneath must be INTACT — no cracks or holes.
-  = Look for: lane dividing lines that are barely visible, zebra crossing stripes that have mostly disappeared, directional arrows on the road that are faded, yellow or white lines at junctions that are gone.
-  = Do NOT use if cracks or holes are present — use cracked_pavement or pothole instead.
-  = Severity guide:
-      1–3 = Markings slightly faded but still clearly visible in daylight
-      4–6 = Markings mostly faded, hard to see clearly especially at night or in rain
-      7–8 = Markings almost completely gone, drivers cannot see lane boundaries
-      9–10 = All markings invisible at a dangerous junction, pedestrian crossing or highway lane merge
-
+      1–3 = Sign slightly tilted but still readable, fallen at road side away from traffic
+      4–5 = Sign fully fallen but at road side, NOT blocking traffic — MAXIMUM score of 5 if roadside only
+      7–8 = Sign fallen and blocking part of the road OR missing at a busy junction
+      9–10 = Sign blocking entire road OR critical safety sign (stop, junction warning) completely missing
+  = STRICT RULE: If the sign is fallen at the ROAD SIDE and NOT blocking any traffic lane, your score MUST NOT exceed 5.
+  = KEY RULE: A sign fallen at the road SIDE → maximum score 5. A sign fallen ON the road blocking traffic → score 7 or above.
+- worn_road_marking   = Faded or worn road markings ONLY — use this when the road surface itself is intact but painted lines, arrows, zebra crossings, or lane markings are no longer clearly visible. Do NOT use if cracks or holes are present (use cracked_pavement or pothole instead).
 - vandalism
-  = Deliberate and intentional damage or defacement of public infrastructure or property.
-  = Look for: graffiti or spray paint on walls, bus stops, bridges or road signs, smashed or deliberately broken fixtures like benches or bins, shattered glass from deliberately broken panels, scratched or defaced public property.
-  = Severity guide:
-      1–3 = Graffiti or minor marks on a wall or surface, purely cosmetic, nothing is broken
-      4–6 = Fixture or equipment damaged but still usable, moderate cosmetic damage
-      7–8 = Public fixture completely destroyed or unusable due to deliberate damage
-      9–10 = Vandalism that creates a direct safety hazard, such as smashed glass on a walkway or destroyed safety barriers
-
-- debris
-  = Foreign objects or waste materials that have landed on or are blocking a road, walkway or drain.
-  = Look for: fallen tree branches or whole trees across the road, piles of construction waste or sand on the road, large rocks or boulders on the road surface, bags of rubbish blocking a drain or walkway, scattered broken materials from a vehicle or building.
-  = Severity guide:
-      1–3 = Small litter or minor debris at the road edge, not blocking traffic flow
-      4–6 = Debris partially blocking one lane, vehicles can still pass with care
-      7–8 = Large debris blocking a full lane or footpath, forcing vehicles to swerve
-      9–10 = Road completely blocked, or sharp/dangerous debris scattered across the full road surface
-
+  = ONLY use this when damage is clearly caused by deliberate and intentional human action — NOT accidents, wear, or weather.
+  = Common vandalism types:
+      1. GRAFFITI — spray paint, marker or paint written/drawn on walls, bridges, bus stops, road signs, drain walls, or any public surface
+      2. SMASHED GLASS — deliberately broken glass panels on bus shelters, phone booths, or public notice boards
+      3. BROKEN PUBLIC FURNITURE — benches, bins, or public seats that have been kicked, beaten or intentionally destroyed (look for impact marks, not rust or wear)
+      4. DEFACED SIGNS — road signs or public signage that have been scratched, painted over, stickered, or deliberately made unreadable
+      5. BURNT PROPERTY — scorch marks or fire damage on public infrastructure caused deliberately
+  = Look for: spray paint text or drawings, shattered glass with impact centre point, deliberate scratch marks, intentional destruction patterns.
+  = STRICT DO NOT USE rules — these are NOT vandalism, use other categories instead:
+      - Broken road dividers, bollards or guardrails → use other
+      - Fallen or bent streetlight poles → use broken_streetlight
+      - Cracked or broken pavement → use cracked_pavement
+      - Rust, moss, or weather wear on any structure → use other
+      - Damaged signs from accidents or storms → use fallen_sign
+      - Structural collapse or deterioration → use other
+      - Anything broken by accident, weather, or natural wear → use other
+      - Bent or damaged metal railings, guardrails, bike racks or barriers → use other
+  = KEY RULE: If you cannot clearly see deliberate human intent (spray paint, smashing, scratching), do NOT use vandalism.
+- debris              = Foreign objects blocking or littering the road or walkway. Look for: fallen tree branches, construction waste, garbage, rocks on road.
 - other
-  = Damage is clearly visible in the photo but does not match any of the categories above.
-  = Use this for: missing or broken manhole covers, collapsed retaining walls, damaged road dividers or bollards, broken pedestrian guardrails, sinkholes, or any other infrastructure damage not listed.
-  = Look for: anything that is clearly broken, missing or damaged that belongs to public infrastructure but does not fit the descriptions above.
-  = Severity guide:
-      1–3 = Minor visible damage with no immediate safety risk
-      4–6 = Moderate damage that needs attention within a few weeks
-      7–8 = Serious structural damage that needs repair within days
-      9–10 = Immediate danger to public safety, must be fixed today
+  = Damage is clearly visible but does not match any category above.
+  = Use this for: broken road dividers, damaged guardrails, bent metal railings, broken bollards, damaged bike racks, missing manhole covers, collapsed retaining walls, sinkholes, or any structural damage not listed above — INCLUDING broken concrete or metal dividers on or beside the road.
+  = KEY RULE: When you see bent or damaged metal structures that are NOT a streetlight pole or road sign → use other.
 
 ====================
 STEP 2 — ESTIMATE SEVERITY SCORE (1–10)
 ====================
-Give an INTEGER score from 1 to 10 based on BOTH the visual severity AND the safety risk.
-Use the severity guide for each category in STEP 1 above as your primary reference.
-Also use these general rules:
+Give an INTEGER score from 1 to 10 based on BOTH the visual severity AND the safety risk:
 
 SCORE 1–3 (LOW) — Minor, cosmetic, no immediate danger:
-- Damage is visible but poses no risk to vehicles or pedestrians
-- Can be scheduled for routine maintenance
+- Small surface crack less than 1cm wide
+- Faded road markings
+- Minor graffiti on a wall
+- Small pothole at road edge, less than 5cm wide
+- Slightly bent sign that is still readable
 
 SCORE 4–6 (MEDIUM) — Moderate damage, needs repair within weeks:
-- Damage is noticeable and could cause minor injury or vehicle damage if ignored
-- Should be added to the next maintenance schedule
+- Pothole 5–15cm wide in non-main road
+- Crack wider than 1cm across pavement
+- Streetlight visibly damaged but pole still standing
+- Partial drain blockage with minor pooling
+- Sign that is tilted but partially readable
 
 SCORE 7–8 (HIGH) — Serious damage, needs repair within days:
-- Damage poses a real risk of injury, accident or property damage
-- Repair crew should be dispatched within 1–3 days
+- Pothole larger than 15cm wide or deeper than 5cm
+- Large crack spanning full width of pavement
+- Streetlight completely broken or fallen
+- Significant flooding covering road surface
+- Sign completely fallen or missing on main road
 
 SCORE 9–10 (CRITICAL) — Immediate danger to public safety, fix TODAY:
-- Damage is an active hazard — someone could be seriously injured right now
-- Repair crew must respond immediately
-- Examples: exposed electrical wires, road completely blocked, massive pothole on highway, missing manhole cover on busy road, multiple hazards visible in one photo
+- Pothole larger than 30cm wide or on highway
+- Collapsed road section
+- Exposed electrical wires from streetlight
+- Severe flooding blocking entire road
+- Multiple hazards visible in one photo
 
 ====================
 STEP 3 — ASSESS YOUR CONFIDENCE
@@ -187,10 +150,10 @@ SPECIAL CASE — If the photo does NOT show any infrastructure damage:
 TYPE_WEIGHT = {
     "flooded_drain":      +2,   # immediate public danger
     "broken_streetlight": +1,   # safety risk especially at night
-    "fallen_sign":        +1,   # traffic safety risk
+    "fallen_sign":         0,   # traffic safety risk
     "worn_road_marking":  +1,   # general road hazard
     "pothole":             0,   # neutral, scored by size
-    "debris":              0,   # neutral, scored by severity
+    "debris":             +1,   # neutral, scored by severity
     "cracked_pavement":   -1,   # usually less urgent
     "vandalism":          -1,   # usually cosmetic
     "other":               0    # neutral
@@ -348,17 +311,11 @@ def validate_and_fix(result: dict) -> dict:
 def analyze_damage(image_path: str, location: str = "Unknown Location") -> dict:
     """Send image to AI and get damage analysis back"""
 
-    # ── OPTION A: Google Gemini — use if FlexToken = Gemini ─────────────
-    client = genai.Client(api_key=API_KEY)
-    # ── OPTION B: OpenAI — use if FlexToken = OpenAI ─────────────────────
-    # client = OpenAI(api_key=API_KEY)
-    # ── OPTION C: Anthropic — use if FlexToken = Anthropic ───────────────
-    # client = anthropic.Anthropic(api_key=API_KEY)
-
     print(f"📸 Sending image to AI for analysis...")
 
-    # Read the image as bytes
+    # Read image and convert to base64
     image_bytes = Path(image_path).read_bytes()
+    image_b64 = base64.b64encode(image_bytes).decode("utf-8")
 
     # Detect image type
     suffix = Path(image_path).suffix.lower()
@@ -371,38 +328,39 @@ def analyze_damage(image_path: str, location: str = "Unknown Location") -> dict:
     }
     mime_type = mime_map.get(suffix, "image/jpeg")
 
-    # ── OPTION A: Google Gemini API call ─────────────────────────────────
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=[
-            types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-            DAMAGE_PROMPT
+    # ── FlexToken API call ────────────────────────────────────────────────
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {API_KEY}"
+    }
+    payload = {
+        "model": "qwen2.5",
+        "max_tokens": 1000,
+        "temperature": 0.1,
+        "top_p": 0.9,
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:{mime_type};base64,{image_b64}"}
+                    },
+                    {
+                        "type": "text",
+                        "text": DAMAGE_PROMPT
+                    }
+                ]
+            }
         ]
-    )
-    # ── OPTION B: OpenAI API call ─────────────────────────────────────────
-    # import base64
-    # image_b64 = base64.b64encode(image_bytes).decode("utf-8")
-    # response = client.chat.completions.create(
-    #     model="gpt-4o",
-    #     messages=[{"role": "user", "content": [
-    #         {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{image_b64}"}},
-    #         {"type": "text", "text": DAMAGE_PROMPT}
-    #     ]}]
-    # )
-    # ── OPTION C: Anthropic API call ──────────────────────────────────────
-    # import base64
-    # image_b64 = base64.b64encode(image_bytes).decode("utf-8")
-    # response = client.messages.create(
-    #     model="claude-sonnet-4-20250514",
-    #     max_tokens=1000,
-    #     messages=[{"role": "user", "content": [
-    #         {"type": "image", "source": {"type": "base64", "media_type": mime_type, "data": image_b64}},
-    #         {"type": "text", "text": DAMAGE_PROMPT}
-    #     ]}]
-    # )
+    }
 
-    # Clean and parse response
-    response_text = clean_response(response.text)
+    response = requests.post(API_URL, headers=headers, json=payload)
+    response.raise_for_status()
+    response_data = response.json()
+
+    # Extract text from FlexToken response
+    response_text = clean_response(response_data["choices"][0]["message"]["content"])
     result = json.loads(response_text)
 
     # Validate and apply full severity formula
@@ -546,10 +504,32 @@ def mock_test():
 # ============================================================
 if __name__ == "__main__":
 
+    import sys
+    import os
+    import random
+
+    IMAGE_FOLDER = "test_images"
+
+    # If image passed as argument — use it
+    if len(sys.argv) > 1:
+        image    = sys.argv[1]
+        location = sys.argv[2] if len(sys.argv) > 2 else "Jalan Bukit Jalil, KL"
+
+    # Otherwise — pick a random image from test_images folder
+    else:
+        all_images = [
+            f for f in os.listdir(IMAGE_FOLDER)
+            if f.lower().endswith((".jpg", ".jpeg", ".png", ".webp"))
+        ]
+        chosen = random.choice(all_images)
+        image    = os.path.join(IMAGE_FOLDER, chosen)
+        location = "Jalan Bukit Jalil, KL"
+        print(f"🎲 Randomly selected image: {chosen}")
+
     # OPTION A: Real AI — use when quota is available
     result = process_citizen_report(
-        image_path="test_images/pothole.jpg",  # ← folder/filename
-        location="Jalan Bukit Jalil, KL",  # change to location
+        image_path=image,
+        location=location,
         report_id="WO-2024-001"
     )
 
