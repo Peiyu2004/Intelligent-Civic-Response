@@ -16,11 +16,21 @@
 <div class="logo"><img src="images/civiscan.png" alt="klcc" width="32" height="30">CiviScan</div>
 
 <div class="top-right">
-<button class="btn user-btn">
-<img src="images/user.png" alt="user" width="20" height="20">
-<span>USER</span>
+  <!-- Container for hover popup -->
+<div class="hover-container">
+  <button class="btn user-btn">
+    <img src="images/user.png" alt="user" width="20" height="20">
+    USER
+  </button>
+
+  <!-- Popup with iframe -->
+  <div class="popup">
+    <iframe src="logout.html" width="300" height="200" frameborder="0"></iframe>
+  </div>
+</div> 
+<button class="btn" onclick="location.href = 'report.html'">
+Get started
 </button>
-<button class="btn">Get Started</button>
 </div>
 
 </div>
@@ -35,7 +45,9 @@
 
 <p>Report infrastructure issues to help to<br>improve the city</p>
 
-<button class="start-btn">Get Started</button>
+<button class="start-btn" onclick="location.href = 'report.html'">
+Get started
+</button>
 
 </div>
 

@@ -13,10 +13,18 @@
   <div class="logo">CiviScan</div>
 
   <div class="top-right">
-    <button class="btn user-btn">
-      <img src="images/user.png" alt="user" width="20" height="20">
-      <span>USER</span>
-    </button>
+      <!-- Container for hover popup -->
+<div class="hover-container">
+  <button class="btn user-btn">
+    <img src="images/user.png" alt="user" width="20" height="20">
+    USER
+  </button>
+
+  <!-- Popup with iframe -->
+  <div class="popup">
+    <iframe src="logout.html" width="300" height="200" frameborder="0"></iframe>
+  </div>
+</div> 
     <span class="icon"><img src="images/notif.png" alt="notif" width="32" height="30"></span>
     <span class="icon"><img src="images/setting.png" alt="setting" width="32" height="30"></span>
   </div>
@@ -26,15 +34,15 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
+    <a href="report.html" class="menu">
+    <img src="images/reportissue2.png" alt="report" width="42" height="35">
+    Report issue
+    </a>
+    <a href="issueHIstory.html" class="menu">
+    <img src="images/history2.png" alt="history" width="42" height="40">
+    Issue history
+    </a>
     <div class="menu active">
-      <img src="images/reportissue2.png" alt="report" width="42" height="35">
-      <span>Report issue</span>
-    </div>
-    <div class="menu">
-      <img src="images/history2.png" alt="history" width="42" height="40">
-      <span>Issue History</span>
-    </div>
-    <div class="menu">
       <img src="images/feedback.png" alt="feedback" width="32" height="30">
       <span>Feedback</span>
     </div>
@@ -66,7 +74,9 @@
       <textarea class="feedback-text"></textarea>
 
       <div class="submit-area">
-        <button class="submit-btn">Submit Feedback</button>
+        <button class="submit-btn" onclick="location.href = 'index.html'">
+         Submit feedback
+        </button>
       </div>
 
     </div> <!-- feedback-box -->

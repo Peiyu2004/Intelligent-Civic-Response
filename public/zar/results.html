@@ -21,7 +21,18 @@ CiviScan
 
 <div class="top-right">
 
-<button class="btn"><img src="images/user.png" alt="user" width="20" height="20">&nbsp&nbspUSER</button>
+  <!-- Container for hover popup -->
+<div class="hover-container">
+  <button class="btn user-btn">
+    <img src="images/user.png" alt="user" width="20" height="20">
+    USER
+  </button>
+
+  <!-- Popup with iframe -->
+  <div class="popup">
+    <iframe src="logout.html" width="300" height="200" frameborder="0"></iframe>
+  </div>
+</div> 
 
 <span class="icon"><img src="images/notif.png" alt="notif" width="32" height="30"></span>
 <span class="icon"><img src="images/setting.png" alt="setting" width="32" height="30"></span>
@@ -39,9 +50,14 @@ CiviScan
 <div class="sidebar">
 
 <div class="menu active"><img src="images/reportissue2.png" alt="report" width="42" height="35">Report issue</div>
-<div class="menu"><img src="images/history2.png" alt="history" width="42" height="40">Issue History</div>
-<div class="menu"><img src="images/feedback.png" alt="feeback" width="32" height="30">Feedback</div>
-
+<a href="issueHistory.html" class="menu">
+  <img src="images/history2.png" alt="history" width="42" height="40">
+  Issue History
+</a>
+<a href="feedback.html" class="menu">
+  <img src="images/feedback.png" alt="feeback" width="32" height="30">
+  Feedback
+</a>
 </div>
 
 
@@ -106,9 +122,13 @@ CiviScan
 
 <div class="result-buttons">
 
-<button class="start-btn">Back</button>
+<button class="start-btn" onclick="location.href = 'report.html'">
+    Back
+</button>
 
-<button class="start-btn">Submit</button>
+<button class="start-btn" onclick="location.href = 'issueHistory.html'">
+    Submit
+</button>
 
 </div>
 
