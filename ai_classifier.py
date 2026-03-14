@@ -27,7 +27,20 @@ Choose the CLOSEST matching category based on what you see in the photo:
   = A hole or depression that goes THROUGH the road surface, exposing the layers underneath.
   = Look for: circular or irregular hole, crumbling edges, exposed gravel or soil at the bottom, water pooling INSIDE the hole.
   = Do NOT use if the surface is cracked but still flat and connected — use cracked_pavement instead.
-- broken_streetlight  = A street light that is visibly damaged, leaning, has broken glass, missing bulb cover, or has fallen over. Look for: bent pole, shattered lamp, dark unlit area at night.
+  = ROAD BLOCKING RULE: If the pothole covers more than half the road width or is on a highway → add +2 to severity.
+  = Do NOT use for circular or round crack patterns — a circle-shaped crack on a flat surface is still cracked_pavement, NOT a pothole. A pothole must have depth and missing material.
+  = If BOTH a pothole AND cracks are visible in the same photo → use pothole, as it is the more dangerous damage. Mention both in the description.
+
+- broken_streetlight
+  = A street light that is visibly damaged, leaning, has broken glass, missing bulb cover, or has fallen over.
+  = Look for: bent pole, shattered lamp, dark unlit area at night.
+  = ROAD BLOCKING RULE: If the pole has fallen ACROSS the road and is blocking traffic → score must be 9 or 10. If pole is fallen at roadside only → score 7–8.
+  = A streetlight pole can look like a bent metal pole, bar or column — it does not have to still look like a lamp post.
+  = Look for: a tall metal pole or column that is bent, leaning heavily or lying on the ground, even if the lamp head is broken off or missing. The pole itself counts as a broken streetlight even without the lamp.
+  = A seriously bent or fallen streetlight pole lying on grass, road or pavement IS broken_streetlight — do NOT classify it as other just because it looks like a metal bar.
+  = KEY RULE: If you see a tall metal pole that is bent or fallen near a road or pavement — even if the lamp is missing or broken off — it is broken_streetlight, NOT other.
+  = CLUE: Streetlight poles are usually round or cylindrical metal tubes, grey or black, and are taller than a person. They are found along roads, pavements and car parks.
+
 - cracked_pavement
   = Use this for ANY road or pavement surface that is cracked, split, broken or fractured — including serious and severe cracks.
   = This includes: small hairline cracks, wide cracks, deep cracks, spider web cracks, raised or sunken slabs, severely broken asphalt that has not yet formed a hole.
@@ -36,7 +49,15 @@ Choose the CLOSEST matching category based on what you see in the photo:
   = Do NOT use for brick or cobblestone roads — straight uniform lines between bricks are joints, not cracks.
   = Do NOT use for broken or damaged road dividers, bollards or barriers — those are metal/concrete structures, not pavement → use other instead.
   = KEY RULE: If the road surface is still there but broken → cracked_pavement. Only use pothole if there is a physical hole where material is completely gone.
-- flooded_drain       = Blocked drainage causing water to pool or flood on road or walkway. Look for: standing water, blocked drain grates, submerged road markings.
+  = ROAD BLOCKING RULE: If cracks cover the full road width and make it dangerous to drive → add +2 to severity.
+  = Do NOT use for brick or cobblestone roads even if the markings on them are faded or worn — if the road is made of bricks or stones and the markings are faded → use worn_road_marking instead.
+  = If BOTH cracks AND a pothole are visible in the same photo → use pothole instead, not cracked_pavement.
+
+- flooded_drain
+  = Blocked drainage causing water to pool or flood on road or walkway.
+  = Look for: standing water, blocked drain grates, submerged road markings.
+  = ROAD BLOCKING RULE: If flooding covers the entire road and makes it impassable → score must be 9 or 10. If flooding is partial → score 6–8.
+
 - fallen_sign
   = A traffic sign, road sign or directional signage that is fallen, bent, missing or unreadable.
   = Look for: sign lying on ground, bent post, blank/missing sign face.
@@ -47,7 +68,14 @@ Choose the CLOSEST matching category based on what you see in the photo:
       9–10 = Sign blocking entire road OR critical safety sign (stop, junction warning) completely missing
   = STRICT RULE: If the sign is fallen at the ROAD SIDE and NOT blocking any traffic lane, your score MUST NOT exceed 5.
   = KEY RULE: A sign fallen at the road SIDE → maximum score 5. A sign fallen ON the road blocking traffic → score 7 or above.
-- worn_road_marking   = Faded or worn road markings ONLY — use this when the road surface itself is intact but painted lines, arrows, zebra crossings, or lane markings are no longer clearly visible. Do NOT use if cracks or holes are present (use cracked_pavement or pothole instead).
+
+- worn_road_marking
+  = Faded or worn road markings ONLY — use this when painted lines, arrows, zebra crossings, or lane markings are no longer clearly visible.
+  = ALSO use this for brick roads, cobblestone roads, or paved stone roads where the painted markings on top have faded or worn away — the brick texture is NOT cracked_pavement.
+  = The road surface underneath must be intact — no holes or structural damage.
+  = Do NOT use if cracks or holes are present (use cracked_pavement or pothole instead).
+  = KEY RULE: If you see a brick or stone road with faded paint markings → this is worn_road_marking, NOT cracked_pavement. The lines between bricks are joints, not cracks.
+  = ROAD BLOCKING RULE: Worn road markings do not block roads — maximum score is 6 regardless of severity.
 - vandalism
   = ONLY use this when damage is clearly caused by deliberate and intentional human action — NOT accidents, wear, or weather.
   = Common vandalism types:
@@ -67,11 +95,54 @@ Choose the CLOSEST matching category based on what you see in the photo:
       - Anything broken by accident, weather, or natural wear → use other
       - Bent or damaged metal railings, guardrails, bike racks or barriers → use other
   = KEY RULE: If you cannot clearly see deliberate human intent (spray paint, smashing, scratching), do NOT use vandalism.
-- debris              = Foreign objects blocking or littering the road or walkway. Look for: fallen tree branches, construction waste, garbage, rocks on road.
+  = ROAD BLOCKING RULE: If vandalism has resulted in debris or broken material blocking the road → increase severity by +2.
+
+- debris
+  = Foreign objects blocking or littering the road or walkway.
+  = Look for: fallen tree branches, construction waste, garbage, rocks on road.
+  = ROAD BLOCKING RULE: This is the most important factor for debris severity:
+      - Debris at road SIDE, not blocking traffic → score 1–4
+      - Debris blocking ONE lane, vehicles can still pass → score 5–6
+      - Debris blocking MOST of the road, vehicles must slow or stop → score 7–8
+      - Debris blocking ENTIRE road, completely impassable → score 9–10
+
 - other
   = Damage is clearly visible but does not match any category above.
   = Use this for: broken road dividers, damaged guardrails, bent metal railings, broken bollards, damaged bike racks, missing manhole covers, collapsed retaining walls, sinkholes, or any structural damage not listed above — INCLUDING broken concrete or metal dividers on or beside the road.
   = KEY RULE: When you see bent or damaged metal structures that are NOT a streetlight pole or road sign → use other.
+  = ROAD BLOCKING RULE: If the damaged structure is blocking or partially blocking the road → add +2 to severity. If it is at the roadside only → score normally.
+
+====================
+MULTIPLE DAMAGE RULE
+====================
+If you can see MORE THAN ONE type of damage in the same photo, follow these rules:
+
+1. CATEGORIZE under the MOST DANGEROUS damage type using this priority order (highest to lowest):
+   1st — flooded_drain (if flooding is blocking the road)
+   2nd — broken_streetlight (if pole is fallen across road or wires exposed)
+   3rd — pothole (if hole is large or blocking road)
+   4th — debris (if blocking most or entire road)
+   5th — fallen_sign (if blocking road)
+   6th — cracked_pavement (serious cracks covering road)
+   7th — other (structural damage blocking road)
+   8th — worn_road_marking
+   9th — vandalism
+   10th — fallen_sign (roadside only)
+   11th — debris (roadside only)
+
+2. USE the severity score of the MOST DANGEROUS damage, then add +1 for each additional damage type visible (maximum score still capped at 10).
+
+3. DESCRIBE ALL visible damage in the description field — do not only mention the main category.
+   Example: "Large pothole on main road with surrounding cracks and a fallen road sign at the roadside."
+
+4. RECOMMENDED ACTION must address ALL visible damage types, not just the main one.
+   Example: "Dispatch road crew to patch pothole and repair surrounding cracks; also send crew to reinstall fallen road sign."
+
+EXAMPLE SCENARIOS:
+- Pothole + cracks → categorize as pothole, score = pothole score + 1, describe both
+- Flooded drain + debris blocking road → categorize as flooded_drain, score = flood score + 1, describe both
+- Fallen sign + cracked pavement + worn markings → categorize as cracked_pavement, score = crack score + 2, describe all three
+- Broken streetlight + vandalism graffiti → categorize as broken_streetlight, score = streetlight score + 1, describe both
 
 ====================
 STEP 2 — ESTIMATE SEVERITY SCORE (1–10)
@@ -93,7 +164,7 @@ SCORE 4–6 (MEDIUM) — Moderate damage, needs repair within weeks:
 - Sign that is tilted but partially readable
 
 SCORE 7–8 (HIGH) — Serious damage, needs repair within days:
-- Pothole larger than 15cm wide or deeper than 5cm
+- Pothole larger than 30cm wide or deeper than 5cm
 - Large crack spanning full width of pavement
 - Streetlight completely broken or fallen
 - Significant flooding covering road surface
@@ -105,6 +176,7 @@ SCORE 9–10 (CRITICAL) — Immediate danger to public safety, fix TODAY:
 - Exposed electrical wires from streetlight
 - Severe flooding blocking entire road
 - Multiple hazards visible in one photo
+- Sign blocking the entire road
 
 ====================
 STEP 3 — ASSESS YOUR CONFIDENCE
@@ -148,7 +220,7 @@ SPECIAL CASE — If the photo does NOT show any infrastructure damage:
 }"""
 
 TYPE_WEIGHT = {
-    "flooded_drain":      +2,   # immediate public danger
+    "flooded_drain":       0,   # immediate public danger
     "broken_streetlight": +1,   # safety risk especially at night
     "fallen_sign":         0,   # traffic safety risk
     "worn_road_marking":  +1,   # general road hazard
