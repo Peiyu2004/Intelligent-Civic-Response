@@ -83,7 +83,7 @@ export const LoginPage: React.FC = () => {
       </nav>
 
       {/* LOGIN CONTAINER */}
-      <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-12">
+      <div className="relative z-10g flex-1 flex items-center justify-center px-4 py-12">
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 md:p-12 w-full max-w-md">
           {/* Form */}
           <form id="loginForm" onSubmit={handleLogin} className="space-y-6">
