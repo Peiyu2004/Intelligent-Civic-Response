@@ -1,48 +1,84 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>CiviScan</title>
+<head>
+<meta charset="UTF-8">
+<title>CiviScan</title>
+<link rel="stylesheet" href="home.css">
+</head>
+<body>
 
-    <link rel="stylesheet" href="style.css" />
-  </head>
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">
+    <img src="images/civiscan.png" width="32" height="30" />
+    CiviScan
+  </div>
 
-  <body>
-    <!-- NAVBAR -->
-    <div class="navbar">
-      <div class="logo">
-        <img src="images/civiscan.png" width="32" height="30" />
-        CiviScan
-      </div>
+  <div class="nav-right">
+    <button class="btn" onclick="location.href='login.html'">Login/Register</button>
+    <button class="btn" onclick="location.href='login.html'">Get Started</button>
+  </div>
+</div>
 
-      <div class="nav-right">
-        <button class="btn" onclick="location.href = 'login.html'">
-          Login/Register
-        </button>
-        <button class="btn" onclick="location.href = 'login.html'">
-          Get Started
-        </button>
-      </div>
-    </div>
+<!-- SECTION 1 : HERO -->
+<section class="page hero-page">
+  <div class="hero">
+    <h1>INTELLIGENT</h1>
+    <h2>CIVIC RESPONSE</h2>
+    <p>
+      Report infrastructure issues to help to<br>
+      improve the city
+    </p>
+    <button class="start-btn" onclick="location.href='login.html'">Get Started</button>
+  </div>
+</section>
 
-    <!-- HERO SECTION -->
+<!-- SECTION 2 : FEATURES -->
+<section class="page feature-page">
 
-    <div class="hero">
-      <h1>INTELLIGENT</h1>
-      <h2>CIVIC RESPONSE</h2>
-
+  <div class="feature-section">
+    <div class="feature-card left-card">
+      <h2>Together to make<br>the city better</h2>
       <p>
-        Report infrastructure issues to help to<br />
-        improve the city
+        Just take a photo and submit here,
+        it will be settled right soon
       </p>
-
-      <button class="start-btn" onclick="location.href = 'login.html'">
-        Get Started
-      </button>
-
-      
+      <img src="images/logFallen2.png" class="feature-img">
     </div>
 
-    <footer></footer>
-  </body>
+    <div class="feature-card right-card">
+      <h2>Automated categorization<br>and severity score</h2>
+      <p>
+        AI will classify damage from the submitted
+        photo and cluster reports
+      </p>
+      <img src="images/scoreGiven4.png" class="feature-img">
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-left">
+      <img src="images/civiscan.png" width="32" height="30"> CiviScan
+    </div>
+
+    <div class="footer-center">
+      <b>About Us</b><br>
+      <a href="#">Home</a> |
+      <a href="#">Term & Condition</a> |
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Contact Us</a>
+    </div>
+
+    <div class="footer-right">
+      <b>Social Media</b><br>
+      <img src="images/ig.png" width="30">
+      <img src="images/fb.png" width="30">
+      <img src="images/wa.png" width="30">
+      <img src="images/yt.png" width="30">
+    </div>
+  </footer>
+
+</section>
+
+</body>
 </html>
