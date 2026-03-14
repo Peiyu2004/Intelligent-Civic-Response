@@ -37,12 +37,20 @@ export const LoginPage: React.FC = () => {
     }
   };
 
+  // const handleForgotPassword = () => {
+  //   alert("Password reset functionality coming soon!");
+  // };
+
+  // const handleRegister = () => {
+  //   alert("Registration functionality coming soon!");
+  // };
+
   const handleForgotPassword = () => {
-    alert("Password reset functionality coming soon!");
+    window.location.href = "/zar/forgetPassword.html";
   };
 
   const handleRegister = () => {
-    alert("Registration functionality coming soon!");
+    window.location.href = "/zar/register.html";
   };
 
   const handleHome = () => {
