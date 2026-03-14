@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  User,
+  CircleUserRound,
   Facebook,
   Instagram,
   Youtube,
@@ -9,8 +9,11 @@ import {
   MessagesSquare,
 } from "lucide-react";
 
+import { useAuth } from "../context/AuthContext.tsx";
+
 export const AdminPage: React.FC = () => {
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
   const [showCard, setShowCard] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -18,8 +21,13 @@ export const AdminPage: React.FC = () => {
     navigate("/dashboard");
   };
 
+  // const handleLogout = () => {
+  //   window.location.href = "/zar/homePage.html";
+  // };
+
   const handleLogout = () => {
-    navigate("/home");
+    logout();
+    navigate("/", { replace: true });
   };
 
   useEffect(() => {
@@ -41,10 +49,11 @@ export const AdminPage: React.FC = () => {
 
   return (
     <div
-      className="w-full bg-cover bg-top relative flex flex-col"
+      className="w-full bg-cover bg-center relative flex flex-col min-h-screen"
       style={{
         backgroundImage: "url('/assets/kl-city.png')",
-        minHeight: "1200px",
+        // minHeight: "1200px",
+        backgroundAttachment: "fixed",
       }}
     >
       {/* Dark overlay */}
@@ -67,13 +76,13 @@ export const AdminPage: React.FC = () => {
                 onClick={() => setShowCard(!showCard)}
                 className="flex items-center gap-2 bg-gray-100 px-4 py-4 rounded-full cursor-pointer hover:bg-gray-200 transition"
               >
-                <User className="w-7 h-7 text-gray-700" />
+                <CircleUserRound className="w-7 h-7 text-gray-700" />
                 <span className="text-gray-700 font-medium">ADMIN</span>
               </div>
               {/* Dropdown */}
               {showCard && (
                 <div className="absolute top-14 right-0 bg-white rounded-xl shadow-lg w-60 p-6 text-center">
-                  <User className="w-10 h-10 mx-auto text-gray-600 mb-2" />
+                  <CircleUserRound className="w-20 h-20 mx-auto text-gray-600 mb-2" />
                   <p className="font-semibold mb-3">ADMIN</p>
                   <div className="flex flex-row">
                     <button className="border-2 rounded-full px-3 py-1 text-sm mr-2">
@@ -86,6 +95,16 @@ export const AdminPage: React.FC = () => {
                     >
                       Log out
                     </button>
+
+                    {/* <button
+                      onClick={(e) => {
+                        e.preventDefault(); // prevents any default behavior
+                        window.location.href = "/public/zar/homePage.html"; // or use replace()
+                      }}
+                      className="border-2 rounded-full px-3 py-1 text-sm"
+                    >
+                      Log out
+                    </button> */}
                   </div>
                 </div>
               )}
@@ -124,7 +143,7 @@ export const AdminPage: React.FC = () => {
       <div className="relative border-t border-white/50 mx-10"></div>
 
       {/* Footer */}
-      <div className="relative flex justify-between text-white text-xl px-10 py-6">
+      <div className="relative flex justify-between text-white text-lg px-10 py-6">
         <div className=" flex items-center gap-2">
           <MessagesSquare className="w-10 h-10 ml-2" />
           <span className="text-white-800 font-medium text-3xl">CiviScan</span>

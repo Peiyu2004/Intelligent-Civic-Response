@@ -1,53 +1,61 @@
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "Backend running"
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
 
+# Initialize Flask app
 app = Flask(__name__)
+CORS(app)
 
+# Upload folder
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-@app.route("/report",methods=["POST"])
-def report_issue():
+# Dummy users for login
+users = [
+    {"username": "admin", "password": "123", "role": "admin"},
+    {"username": "user", "password": "123", "role": "user"}
+]
 
-    image = request.files["image"]
-    description = request.form.get("description")
+# -------------------------------
+# LOGIN API
+# -------------------------------
+@app.route("/api/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
+    user = next((u for u in users if u["username"] == username and u["password"] == password), None)
+    if not user:
+        return jsonify({"message": "Invalid login"}), 401
+    return jsonify({"role": user["role"]})
 
-    filepath = os.path.join(UPLOAD_FOLDER, image.filename)
-    image.save(filepath)
-
-    return jsonify({
-        "message": "Report received",
-        "image_path": filepath,
-        "description": description
-    })
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-from ai_service import analyze_damage
-
-# connect ai
+# -------------------------------
+# REPORT UPLOAD API
+# -------------------------------
 @app.route("/report", methods=["POST"])
 def report_issue():
+    if "image" not in request.files:
+        return jsonify({"message": "No image uploaded"}), 400
 
     image = request.files["image"]
-    description = request.form.get("description")
+    description = request.form.get("description", "")
 
     filepath = os.path.join(UPLOAD_FOLDER, image.filename)
     image.save(filepath)
 
-    ai_result = analyze_damage(filepath)
+    # Call AI service if available
+    try:
+        from ai_service import analyze_damage
+        ai_result = analyze_damage(filepath)
+    except:
+        ai_result = {"damage_type": "unknown", "severity_score": 0, "description": description}
+
+    # Save to database (optional, requires database setup)
+    # from database import get_connection
+    # conn = get_connection()
+    # conn.execute("INSERT INTO reports (...) VALUES (...)", (...))
+    # conn.commit()
+    # conn.close()
 
     return jsonify({
         "damage_type": ai_result["damage_type"],
@@ -55,35 +63,37 @@ def report_issue():
         "description": ai_result["description"]
     })
 
-# save reports to database
-from database import init_db
-
-init_db()
-
-# create dashboard api
+# -------------------------------
+# DASHBOARD APIs
+# -------------------------------
 @app.route("/reports", methods=["GET"])
 def get_reports():
-
-    conn = get_connection()
-
-    reports = conn.execute(
-        "SELECT * FROM reports"
-    ).fetchall()
-
-    conn.close()
-
+    # Dummy data for now, replace with DB query
+    reports = [
+        {"id":1, "description":"Pothole", "severity_score":8},
+        {"id":2, "description":"Crack", "severity_score":5}
+    ]
     return jsonify(reports)
 
-# add priority logic
-    @app.route("/priority", methods=["GET"])
-    def get_priority():
+@app.route("/priority", methods=["GET"])
+def get_priority():
+    # Sort by severity descending
+    reports = [
+        {"id":1, "description":"Pothole", "severity_score":8},
+        {"id":2, "description":"Crack", "severity_score":5}
+    ]
+    reports.sort(key=lambda r: r["severity_score"], reverse=True)
+    return jsonify(reports)
 
-        conn = get_connection()
+# -------------------------------
+# HEALTH CHECK
+# -------------------------------
+@app.route("/")
+def home():
+    return "Backend running"
 
-        reports = conn.execute(
-            "SELECT * FROM reports ORDER BY severity_score DESC"
-        ).fetchall()
-
-        conn.close()
-
-        return jsonify(reports)
+# -------------------------------
+# RUN SERVER
+# -------------------------------
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
