@@ -11,18 +11,24 @@ import { useAuth } from "../context/AuthContext.tsx";
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useAuth();
+  // const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
 
   const handleLoginClick = () => {
     navigate("/login");
   };
 
   const handleGetStarted = () => {
-    if (isAuthenticated) {
-      // If already logged in, go to dashboard
-      navigate("/dashboard");
+    if (isAuthenticated && user) {
+      if (user.role === "user") {
+        // If user is authenticated and role is user
+        window.location.href = "/zar/report.html";
+      } else if (user.role === "admin") {
+        // If user is authenticated and role is admin
+        navigate("/dashboard");
+      }
     } else {
-      // Otherwise go to login
+      // If not authenticated, go to login
       navigate("/login");
     }
   };
@@ -62,12 +68,12 @@ export const HomePage: React.FC = () => {
           <div className="flex items-center gap-2 md:gap-4">
             {isAuthenticated ? (
               <>
-                <button
+                {/* <button
                   onClick={() => navigate("/dashboard")}
                   className="hidden md:block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full font-medium transition"
                 >
                   Dashboard
-                </button>
+                </button> */}
                 <button
                   onClick={handleLogout}
                   className="bg-red-500 hover:bg-red-600 text-white px-4 md:px-6 py-3 rounded-full font-medium transition"
@@ -83,12 +89,12 @@ export const HomePage: React.FC = () => {
                 >
                   Login/Register
                 </button>
-                <button
+                {/* <button
                   onClick={handleGetStarted}
                   className="bg-white hover:bg-gray-100 text-gray-800 px-4 md:px-6 py-3 rounded-full font-medium shadow transition"
                 >
                   Get Started
-                </button>
+                </button> */}
               </>
             )}
           </div>
