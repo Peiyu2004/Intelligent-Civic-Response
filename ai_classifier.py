@@ -30,6 +30,7 @@ Choose the CLOSEST matching category based on what you see in the photo:
   = ROAD BLOCKING RULE: If the pothole covers more than half the road width or is on a highway → add +2 to severity.
   = Do NOT use for circular or round crack patterns — a circle-shaped crack on a flat surface is still cracked_pavement, NOT a pothole. A pothole must have depth and missing material.
   = If BOTH a pothole AND cracks are visible in the same photo → use pothole, as it is the more dangerous damage. Mention both in the description.
+  = A circular CRACK PATTERN on a flat road surface is NOT a pothole — it is cracked_pavement. You must be able to see a visible DROP in depth, like a bowl or hole shape, before calling it a pothole. If the surface looks flat even with circular cracks → use cracked_pavement.
 
 - broken_streetlight
   = A street light that is visibly damaged, leaning, has broken glass, missing bulb cover, or has fallen over.
@@ -407,7 +408,7 @@ def analyze_damage(image_path: str, location: str = "Unknown Location") -> dict:
     }
     payload = {
         "model": "qwen2.5",
-        "max_tokens": 1000,
+        "max_completion_tokens": 2000,
         "temperature": 0.1,
         "top_p": 0.9,
         "messages": [
