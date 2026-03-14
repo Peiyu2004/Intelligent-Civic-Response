@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (username: string, password: string) => {
     try {
-      // Mock authentication - replace with actual API call
+      // Try API first, fallback to mock auth
       const response = await authenticateUser(username, password);
 
       if (response.success) {
@@ -53,6 +53,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("authToken", response.token);
+
+        // Redirect based on role
+        if (response.role === "user") {
+          // Redirect to user HTML portal
+          window.location.href = "/zar/index.html";
+        }
+        // Admin users stay in React app
       } else {
         throw new Error(response.message || "Login failed");
       }
@@ -84,12 +91,35 @@ export const useAuth = () => {
   return context;
 };
 
-// Mock authentication function - replace with your API call
+// Authentication function
 const authenticateUser = async (username: string, password: string) => {
-  // Simulate API delay
+  try {
+    // Try to connect to backend API first
+    const apiResponse = await fetch("http://localhost:5000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (apiResponse.ok) {
+      const data = await apiResponse.json();
+      return {
+        success: true,
+        userId: data.userId || `user-${Date.now()}`,
+        username: data.username,
+        role: data.role,
+        token: data.token || `mock-token-${Date.now()}`,
+      };
+    }
+  } catch (error) {
+    console.log("API not available, using mock authentication");
+  }
+
+  // Fallback to mock authentication
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  // Mock users database
   const users: Record<
     string,
     { password: string; role: string; userId: string }
