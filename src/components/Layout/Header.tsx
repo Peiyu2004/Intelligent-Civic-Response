@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = () => {
-    navigate("/home");
+    window.location.href = "/zar/homePage.html";
   };
 
   useEffect(() => {
