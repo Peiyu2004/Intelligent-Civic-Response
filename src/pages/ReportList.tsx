@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Layout/Header.tsx";
 import { Sidebar } from "../components/Layout/Sidebar.tsx";
@@ -11,7 +11,8 @@ import {
   filterReportsByCluster,
   getSeverityLabel,
 } from "../utils/helpers.ts";
-import { Report } from "../types";
+import { Report, Cluster } from "../types";
+import apiService from "../services/apiService.ts";
 
 export const ReportList = () => {
   const [statusFilter, setStatusFilter] = useState("all");
@@ -21,8 +22,37 @@ export const ReportList = () => {
   const [selectedClusterId, setSelectedClusterId] = useState<string | null>(
     null,
   );
-  const [reports, setReports] = useState(mockReports);
+  // const [reports, setReports] = useState(mockReports);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [clusters, setClusters] = useState<Cluster[]>([]);
   const [locationInput, setLocationInput] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const [reportsData, clustersData] = await Promise.all([
+          apiService.getReports(),
+          apiService.getClusters(),
+        ]);
+
+        setReports(reportsData);
+        setClusters(clustersData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch data");
+        console.error("Error fetching reports:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const filteredReports = useMemo(() => {
     let filtered = reports;
@@ -39,15 +69,33 @@ export const ReportList = () => {
     }
   };
 
-  const handleStatusChange = (
+  // const handleStatusChange = (
+  //   reportId: string,
+  //   status: "in progress" | "completed",
+  // ) => {
+  //   setReports(reports.map((r) => (r.id === reportId ? { ...r, status } : r)));
+  // };
+  const handleStatusChange = async (
     reportId: string,
     status: "in progress" | "completed",
   ) => {
-    setReports(reports.map((r) => (r.id === reportId ? { ...r, status } : r)));
+    try {
+      const updatedReport = await apiService.updateReportStatus(
+        reportId,
+        status,
+      );
+      setReports(reports.map((r) => (r.id === reportId ? updatedReport : r)));
+    } catch (err) {
+      console.error("Error updating report status:", err);
+      setError("Failed to update report status");
+    }
   };
 
+  // const selectedCluster = selectedClusterId
+  //   ? mockClusters.find((c) => c.id === selectedClusterId)
+  //   : null;
   const selectedCluster = selectedClusterId
-    ? mockClusters.find((c) => c.id === selectedClusterId)
+    ? clusters.find((c) => c.id === selectedClusterId)
     : null;
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -56,6 +104,23 @@ export const ReportList = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  if (loading) {
+    return (
+      <div className="flex h-screen bg-gray-100 pt-20">
+        <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Header toggleSidebar={toggleSidebar} />
+          <main className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading reports...</p>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-100 pt-20">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
@@ -63,6 +128,12 @@ export const ReportList = () => {
         <Header toggleSidebar={toggleSidebar} />
         <main className="flex-1 overflow-auto p-6">
           <div className="w-full mx-auto">
+            {/* new  */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <p className="text-red-800">{error}</p>
+              </div>
+            )}
             {/* Filters */}
             <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

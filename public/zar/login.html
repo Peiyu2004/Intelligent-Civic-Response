@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CiviScan Login</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+      <div class="logo">
+        <img src="images/civiscan.png" alt="klcc" width="32" height="30" />
+        CiviScan
+      </div>
+
+      <button class="home-btn">Home</button>
+    </div>
+
+    <!-- LOGIN BOX -->
+    <div class="login-container">
+      <form id="loginForm">
+        <div class="form-row">
+          <label>Username:</label>
+          <input type="text" id="username" placeholder="User123" required />
+        </div>
+
+        <div class="form-row">
+          <label>Password:</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Password123"
+            required
+          />
+        </div>
+
+        <div class="button-row">
+          <button type="button" class="btn">Forget Password</button>
+          <button type="submit" class="btn">Login</button>
+        </div>
+
+        <div class="register-row">
+          <button type="button" class="btn">Register</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-left">
+        <img src="images/civiscan.png" alt="bubble" width="32" height="30" />
+        CiviScan
+      </div>
+
+      <div class="footer-center">
+        <b>About Us</b><br />
+        <a href="#">Home</a> | <a href="#">Term & Condition</a> |
+        <a href="#">Privacy Policy</a> |
+        <a href="#">Contact Us</a>
+      </div>
+
+      <div class="footer-right">
+        <b>Social Media</b><br />
+        <span><img src="images/ig.png" width="32" height="30" /></span>
+        <span><img src="images/fb.png" width="32" height="30" /></span>
+        <span><img src="images/wa.png" width="32" height="30" /></span>
+        <span><img src="images/yt.png" width="32" height="30" /></span>
+      </div>
+    </footer>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const username = document.getElementById("username").value;
+          const password = document.getElementById("password").value;
+
+          try {
+            const response = await fetch("http://localhost:3000/api/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                username: username,
+                password: password,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (data.role === "admin") {
+              window.location.href = "/dashboard"; // React admin dashboard
+            } else if (data.role === "user") {
+              window.location.href = "/zar/index.html"; // User HTML portal
+            } else {
+              alert("Invalid username or password");
+            }
+          } catch (error) {
+            console.error("Login error:", error);
+            alert("Server connection error");
+          }
+        });
+    </script>
+  </body>
+</html>
