@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Leaflet Map with Custom Red Pin</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css"
+    />
+    <style>
+      /* Set map container size */
+      #map {
+        height: 500px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Leaflet Map - Click to Place Red Pin</h1>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+      // Create a map and set the initial view
+      const map = L.map("map").setView([51.5074, -0.1278], 13); // Example coordinates (London)
+
+      // Add OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // Custom red pin icon using the local redpin.jpg image
+      const redIcon = new L.Icon({
+        iconUrl: "images/redpin.jpg", // Path to your local red pin image
+        iconSize: [50, 50], // Adjust the size of the pin (width, height)
+        iconAnchor: [25, 50], // The bottom of the icon should be at the marker's point
+        popupAnchor: [0, -40], // Adjust the popup's position
+      });
+
+      // Function to add a marker on map click
+      map.on("click", function (e) {
+        const lat = e.latlng.lat; // Latitude of the clicked location
+        const lng = e.latlng.lng; // Longitude of the clicked location
+
+        // Place the custom red pin at the clicked position
+        L.marker([lat, lng], { icon: redIcon })
+          .addTo(map)
+          .bindPopup("Red pin at (" + lat.toFixed(4) + ", " + lng.toFixed(4) + ")")
+          .openPopup();
+      });
+    </script>
+  </body>
+</html>
