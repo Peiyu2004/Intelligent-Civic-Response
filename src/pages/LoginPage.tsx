@@ -58,10 +58,10 @@ export const LoginPage: React.FC = () => {
       }}
     >
       {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="fixed inset-0 bg-black/40 z-0"></div>
 
       {/* Navbar */}
-      <nav className="relative flex justify-center pt-6">
+      <nav className="relative z-10 flex justify-center pt-6">
         <div className="w-[90%] md:w-[85%] bg-white/70 backdrop-blur-md rounded-full px-6 py-5 flex justify-between items-center shadow-lg">
           {/* Logo */}
           <div
@@ -83,7 +83,7 @@ export const LoginPage: React.FC = () => {
       </nav>
 
       {/* LOGIN CONTAINER */}
-      <div className="relative flex-1 flex items-center justify-center px-4 py-12">
+      <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-12">
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 md:p-12 w-full max-w-md">
           {/* Form */}
           <form id="loginForm" onSubmit={handleLogin} className="space-y-6">
