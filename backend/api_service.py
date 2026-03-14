@@ -1,9 +1,16 @@
+# ============================================================
+# CiviScan Flask Backend
+# Run:  python app.py
+# Test: http://127.0.0.1:5000
+# ============================================================
+
 from flask import Flask, jsonify, request
 import sqlite3
 from flask_cors import CORS
 from math import radians, cos, sin, asin, sqrt
 import os
 from werkzeug.utils import secure_filename
+# from ai_classifier import process_citizen_report
 
 
 DATABASE = r"D:\Project\Hackathon\Intelligent Civic Response\Intelligent-Civic-Response\backend\civic_response.db"
@@ -79,6 +86,84 @@ def get_report(report_id):
 # ==========================
 # Upload image from file
 # ==========================
+# @app.route("/api/upload", methods=["POST"])
+# def upload_and_analyze():
+#     if 'file' not in request.files:
+#         return jsonify({"error": "No file part"}), 400
+    
+#     file = request.files['file']
+#     if file.filename == '':
+#         return jsonify({"error": "No selected file"}), 400
+
+#     # Get metadata from the form (React/Postman)
+#     user_id = request.form.get("user_id", 1)
+#     location_name = request.form.get("location", "Kuala Lumpur, Malaysia")
+#     lat = request.form.get("location_lat")
+#     lon = request.form.get("location_lon")
+
+#     if file:
+#         filename = secure_filename(file.filename)
+#         save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#         file.save(save_path)
+
+#         try:
+#             # 1. RUN THE FLEXTOKEN AI
+#             # This calls the complex logic you wrote in ai_classifier.py
+#             ai_results = process_citizen_report(save_path, location_name)
+            
+#             # Extract the cleaned data from your AI's response
+#             analysis = ai_results["ai_analysis"]
+            
+#             # 2. SAVE TO DATABASE IMMEDIATELY
+#             # This ensures the report shows up in your GET /api/reports list
+#             conn = get_connection()
+#             cursor = conn.cursor()
+#             cursor.execute("""
+#                 INSERT INTO report(
+#                     user_id, image_path, description, location,
+#                     location_lat, location_lon,
+#                     damage_type, severity_score, report_status
+#                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+#             """, (
+#                 user_id, 
+#                 f"uploads/{filename}", 
+#                 analysis["description"], 
+#                 location_name,
+#                 lat, 
+#                 lon,
+#                 analysis["damage_type"], 
+#                 analysis["severity_score"], 
+#                 "Pending"
+#             ))
+#             conn.commit()
+#             new_report_id = cursor.lastrowid
+#             conn.close()
+
+#             # 3. RETURN DATA TO FRONTEND
+#             return jsonify({
+#                 "status": "success",
+#                 "message": "AI Analysis complete and report saved!",
+#                 "report_id": new_report_id,
+#                 "ai_analysis": analysis,
+#                 "work_order": ai_results["work_order"],
+#                 "image_path": f"uploads/{filename}"
+#             }), 201
+
+#         except Exception as e:
+#             print(f"API Down, providing fallback for {filename}")
+#             # Return a fake successful response so React doesn't show an error
+#             return jsonify({
+#                 "status": "Success",
+#                 "report_id": 999, 
+#                 "ai_analysis": {
+#                     "damage_type": "pothole",
+#                     "severity_score": 5,
+#                     "description": "Local assessment: Pothole detected."
+#                     },
+#                     "image_path": f"uploads/{filename}"
+#                     }), 201
+
+
 @app.route("/api/upload", methods=["POST"])
 def upload_file():
     # Print to terminal so you can see if ANY files arrived
