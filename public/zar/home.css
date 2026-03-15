@@ -1,0 +1,307 @@
+
+/* =========================
+   ROOT VARIABLES
+========================= */
+:root{
+--primary:#7a00ff;
+--secondary:#c300ff;
+--glass:rgba(255,255,255,0.75);
+--card:rgba(255,255,255,0.92);
+--text-dark:#222;
+--shadow:0 10px 30px rgba(0,0,0,0.35);
+}
+
+/* =========================
+   GLOBAL RESET
+========================= */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+html{
+scroll-snap-type:y proximity;
+scroll-behavior:smooth;
+overflow-y:scroll;
+}
+
+body{
+background:url("images/kl.jpg") center/cover no-repeat fixed;
+color:white;
+}
+
+/* SNAP PAGE SYSTEM */
+.page{
+height:100vh;
+scroll-snap-align:start;
+display:flex;
+flex-direction:column;
+}
+
+/* NAVBAR */
+.navbar{
+width:90%;
+margin:20px auto;
+background:var(--glass);
+backdrop-filter:blur(8px);
+border-radius:40px;
+padding:10px 20px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:8px;
+font-weight:bold;
+color:black;
+font-size:18px;
+}
+
+.nav-right{
+display:flex;
+gap:15px;
+}
+
+.btn{
+padding:9px 20px;
+border-radius:25px;
+border:none;
+background:white;
+color:black;
+font-weight:bold;
+font-size:15px;
+cursor:pointer;
+transition:all .25s ease;
+}
+
+.btn:hover{
+transform:translateY(-2px);
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+background:#f5f5f5;
+}
+
+/* HERO SECTION */
+.hero{
+flex:1;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.hero h1{
+font-size:64px;
+font-weight:900;
+letter-spacing:2px;
+}
+
+.hero h2{
+font-size:36px;
+letter-spacing:3px;
+}
+
+.hero p{
+margin-top:12px;
+font-size:18px;
+line-height:1.4;
+}
+
+.start-btn{
+margin-top:35px;
+padding:18px 55px;
+font-size:22px;
+border:none;
+border-radius:40px;
+background:linear-gradient(45deg,var(--primary),var(--secondary));
+color:white;
+cursor:pointer;
+transition:0.25s;
+}
+
+.start-btn:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px rgba(195,0,255,0.6);
+}
+
+/* FEATURE SECTION */
+.feature-page{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.feature-section{
+  flex:1; /* allow footer to stay visible */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:60px;
+  padding:20px;
+  position:relative; /* above overlay */
+  z-index:1;
+}
+
+.feature-card{
+width:360px;
+padding:30px;
+background:var(--card);
+border-radius:20px;
+color:var(--text-dark);
+box-shadow:var(--shadow);
+opacity:0;
+transition:transform .3s ease, box-shadow .3s ease;
+}
+
+.feature-card:hover{
+transform:translateY(-8px);
+box-shadow:0 15px 40px rgba(0,0,0,0.45);
+}
+
+.feature-card h2{
+font-size:28px;
+margin-bottom:12px;
+line-height:1.2;
+}
+
+.feature-card p{
+font-size:16px;
+margin-bottom:30px;
+line-height:1.4;
+color:#333;
+}
+
+.feature-img{
+display:block;
+margin:auto;
+max-width:260px;
+height:auto;
+}
+
+.feature-card h2{
+font-size:24px;
+margin-bottom:8px;
+}
+
+.feature-card p{
+font-size:15px;
+margin-bottom:20px;
+}
+
+/* ANIMATIONS */
+.left-card{
+transform:translateX(-350px);
+animation:flyLeft 1s forwards .3s;
+}
+
+.right-card{
+transform:translateX(350px);
+animation:flyRight 1s forwards .3s;
+}
+
+@keyframes flyLeft{
+to{opacity:1;transform:translateX(0);}
+}
+
+@keyframes flyRight{
+to{opacity:1;transform:translateX(0);}
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(30px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* FOOTER */
+footer{
+display:flex;
+justify-content:space-between;
+padding:15px 60px;
+font-size:13px;
+align-items:center;
+}
+
+.footer-left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.footer-center{
+text-align:center;
+}
+
+.footer-right{
+font-size:20px;
+padding-right:20px;
+}
+
+a{
+color:white;
+text-decoration:none;
+}
+
+/* RESPONSIVE */
+@media (max-width:1000px){
+
+.feature-section{
+flex-direction:column;
+align-items:center;
+}
+
+.feature-card{
+width:90%;
+}
+
+.hero h1{
+font-size:48px;
+}
+
+.hero h2{
+font-size:28px;
+}
+
+}
+
+@media (max-width:600px){
+
+.navbar{
+flex-direction:column;
+gap:10px;
+}
+
+.nav-right{
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.hero{
+margin-top:80px;
+}
+
+footer{
+  position:relative;
+  z-index:1;
+  padding:15px 60px;
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  background:transparent; /* let overlay handle darkness */
+  align-items:center;
+}
+
+.feature-section,
+footer{
+position:relative;
+z-index:1;
+}
+
+}

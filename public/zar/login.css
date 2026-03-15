@@ -1,0 +1,133 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+height:100vh;
+background:url("kl.jpg") center/cover no-repeat;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+color:white;
+}
+
+
+/* NAVBAR */
+
+.navbar{
+width:80%;
+margin:20px auto;
+padding:12px 20px;
+background:rgba(255,255,255,0.6);
+border-radius:30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-weight:bold;
+color:black;
+font-size:18px;
+}
+
+.home-btn{
+padding:8px 20px;
+border-radius:20px;
+border:none;
+background:#eee;
+cursor:pointer;
+}
+
+
+/* LOGIN BOX */
+
+.login-container{
+width:650px;
+margin:auto;
+padding:40px;
+background:rgba(255,255,255,0.5);
+border-radius:20px;
+backdrop-filter:blur(5px);
+}
+
+.form-row{
+display:flex;
+align-items:center;
+margin:20px 0;
+}
+
+.form-row label{
+width:120px;
+font-weight:bold;
+color:black;
+}
+
+.form-row input{
+flex:1;
+padding:12px;
+border-radius:20px;
+border:none;
+background:#eee;
+}
+
+
+/* BUTTONS */
+
+.button-row{
+display:flex;
+justify-content:space-between;
+margin-top:30px;
+}
+
+.register-row{
+margin-top:20px;
+}
+
+.btn{
+padding:12px 30px;
+border-radius:25px;
+border:none;
+background:#eee;
+font-size:16px;
+cursor:pointer;
+}
+
+.btn:hover{
+background:white;
+}
+
+
+/* FOOTER */
+
+footer{
+display:flex;
+justify-content:space-between;
+padding:30px 60px;
+font-size:14px;
+}
+
+.footer-left{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.footer-center{
+text-align:center;
+}
+
+.footer-right{
+text-align:20px;
+gap:10px;
+font-size:20px;
+padding-right:20px;
+}
+
+a{
+color:white;
+text-decoration:none;
+}

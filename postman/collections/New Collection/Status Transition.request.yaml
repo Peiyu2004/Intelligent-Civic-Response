@@ -1,0 +1,18 @@
+$kind: http-request
+url: http://127.0.0.1:5000/api/work-orders/complete/1
+method: POST
+headers:
+  Accept: application/json
+  Content-Type: application/json
+body:
+  type: json
+  content: "{\r
+
+    \    \"notes\": \"Repair completed by Team A. Pothole filled and
+    leveled.\",\r
+
+    \    \"completion_date\": \"2026-03-14\"\r
+
+    }"
+examples: .resources/Status Transition.resources/examples
+order: 3573506614945640

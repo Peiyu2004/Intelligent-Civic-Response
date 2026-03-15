@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CiviScan Feedback</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dashboard-page">
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">CiviScan</div>
+
+  <div class="top-right">
+      <!-- Container for hover popup -->
+<div class="hover-container">
+  <button class="btn user-btn">
+    <img src="images/user.png" alt="user" width="20" height="20">
+    USER
+  </button>
+
+  <!-- Popup with iframe -->
+  <div class="popup">
+    <div class="popup-avatar"><img src="images/user.png" alt="user"></div>
+        <div class="popup-name">USER</div>
+        <div class="popup-buttons">
+          <button class="popup-btn">View Profile</button>
+          <button class="popup-btn" onclick="location.href='homePage.html'">Log Out</button>
+        </div>
+  </div>
+</div> 
+    <span class="icon"><img src="images/notif.png" alt="notif" width="32" height="30"></span>
+    <span class="icon"><img src="images/setting.png" alt="setting" width="32" height="30"></span>
+  </div>
+</div>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <a href="report.html" class="menu">
+    <img src="images/reportissue2.png" alt="report" width="42" height="35">
+    Report issue
+    </a>
+    <a href="issueHIstory.html" class="menu">
+    <img src="images/history2.png" alt="history" width="42" height="40">
+    Issue history
+    </a>
+    <div class="menu active">
+      <img src="images/feedback.png" alt="feedback" width="32" height="30">
+      <span>Feedback</span>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+    <div class="feedback-box">
+
+      <h1>Feedback:</h1>
+
+      <p class="question">How would you describe your mood after using our service?</p>
+      <div class="mood-row">
+        <div class="mood happy">😊</div>
+        <div class="mood">😐</div>
+        <div class="mood">😞</div>
+      </div>
+
+      <p class="question">How would you rate the quality of our service?</p>
+      <div class="rating-row">
+        <div class="rate">1</div>
+        <div class="rate">2</div>
+        <div class="rate">3</div>
+        <div class="rate">4</div>
+        <div class="rate">5</div>
+      </div>
+
+      <p class="question">Your feedback</p>
+      <textarea class="feedback-text"></textarea>
+
+      <div class="submit-area">
+        <button class="submit-btn" onclick="location.href = 'index.html'">
+         Submit feedback
+        </button>
+      </div>
+
+    </div> <!-- feedback-box -->
+  </div> <!-- content -->
+
+</div> <!-- dashboard -->
+
+<!-- =========================
+   JAVASCRIPT FOR CLICK EFFECTS
+========================= -->
+<script>
+  // MOOD CLICK
+  const moods = document.querySelectorAll('.mood');
+  moods.forEach(mood => {
+    mood.addEventListener('click', () => {
+      moods.forEach(m => m.classList.remove('selected'));
+      mood.classList.add('selected');
+    });
+  });
+
+  // RATING CLICK
+  const rates = document.querySelectorAll('.rate');
+  rates.forEach(rate => {
+    rate.addEventListener('click', () => {
+      rates.forEach(r => r.classList.remove('selected'));
+      rate.classList.add('selected');
+    });
+  });
+</script>
+
+</body>
+</html>

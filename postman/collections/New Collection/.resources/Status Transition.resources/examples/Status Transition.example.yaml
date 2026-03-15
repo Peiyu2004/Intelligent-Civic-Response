@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: http://127.0.0.1:5000/api/work-orders/complete/1
+  method: POST
+  headers:
+    Accept: application/json
+    Content-Type: application/json
+  body:
+    type: json
+    content: "{\r
+
+      \    \"notes\": \"Repair completed by Team A. Pothole filled and
+      leveled.\",\r
+
+      \    \"completion_date\": \"2026-03-14\"\r
+
+      }"
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    server: Werkzeug/3.1.6 Python/3.11.3
+    date: Sat, 14 Mar 2026 16:00:20 GMT
+    content-type: application/json
+    content-length: "73"
+    access-control-allow-origin: "*"
+    connection: close
+  body:
+    type: json
+    content: |
+      {
+        "message": "Work order 1 and all related reports marked as Fixed!"
+      }
+order: 1773504028451
