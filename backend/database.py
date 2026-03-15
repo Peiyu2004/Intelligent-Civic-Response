@@ -1,6 +1,6 @@
 import sqlite3
 
-DATABASE = r"D:\Project\Hackathon\Intelligent Civic Response\Intelligent-Civic-Response\backend\civic_response.db"
+DATABASE = r"C:\Users\Chan Jia Ying\Desktop\hackathon\admin2\civicscan-dashboard\backend\civic_response.db"
 
 
 # ==========================

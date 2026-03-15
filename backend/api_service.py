@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 # from ai_classifier import process_citizen_report
 
 
-DATABASE = r"D:\Project\Hackathon\Intelligent Civic Response\Intelligent-Civic-Response\backend\civic_response.db"
+DATABASE = r"C:\Users\Chan Jia Ying\Desktop\hackathon\admin2\civicscan-dashboard\backend\civic_response.db"
  
 app = Flask(__name__)
 CORS(app)  # allow requests from React / other frontend
@@ -220,7 +220,39 @@ def create_report():
     return jsonify({"message": "Report created", "report_id": report_id}), 201
  
  
-# ==========================
+# # ==========================
+# # UPDATE report
+# # ==========================
+# @app.route("/api/report/<int:report_id>", methods=["PUT", "PATCH"])
+# def edit_report(report_id):
+#     data = request.get_json()
+#     if not data:
+#         return jsonify({"error": "No data provided"}), 400
+ 
+#     fields = ["description", "location", "image_path", "damage_type", "severity_score", "report_status"]
+#     updates = {k: data[k] for k in fields if k in data}
+ 
+#     if not updates:
+#         return jsonify({"error": "No fields to update"}), 400
+ 
+#     conn = get_connection()
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT * FROM report WHERE report_id = ?", (report_id,))
+#     if not cursor.fetchone():
+#         conn.close()
+#         return jsonify({"error": "Report not found"}), 404
+ 
+#     set_clause = ", ".join([f"{k}=?" for k in updates.keys()])
+#     values = list(updates.values())
+#     values.append(report_id)
+#     cursor.execute(f"UPDATE report SET {set_clause} WHERE report_id = ?", values)
+#     conn.commit()
+#     conn.close()
+ 
+#     return jsonify({"message": f"Report {report_id} updated", "updated_fields": updates})
+ 
+
+ # ==========================
 # UPDATE report
 # ==========================
 @app.route("/api/report/<int:report_id>", methods=["PUT", "PATCH"])
@@ -247,10 +279,13 @@ def edit_report(report_id):
     values.append(report_id)
     cursor.execute(f"UPDATE report SET {set_clause} WHERE report_id = ?", values)
     conn.commit()
+    
+    # ✅ FETCH THE UPDATED REPORT AND RETURN IT
+    updated_row = cursor.execute("SELECT * FROM report WHERE report_id = ?", (report_id,)).fetchone()
     conn.close()
- 
-    return jsonify({"message": f"Report {report_id} updated", "updated_fields": updates})
- 
+    
+    # Return the complete updated report
+    return jsonify(dict(updated_row)), 200
  
 # ==========================
 # DELETE report
@@ -500,6 +535,30 @@ def complete_work_order(workorder_id):
     finally:
         conn.close()
  
+
+@app.route("/api/login", methods=["POST"])
+def login():
+
+    data = request.get_json()
+
+    username = data.get("username")
+    password = data.get("password")
+
+        # HARD-CODED ADMIN
+    if username == "admin" and password == "admin123":
+        return jsonify({
+            "username": "admin",
+            "role": "admin"
+        })
+
+    for user in users:
+        if user["username"] == username and user["password"] == password:
+            return jsonify({
+                "username": username,
+                "role": user["role"]
+            })
+
+    return jsonify({"message": "Invalid credentials"}), 401
 
 # ==========================
 # Run server
