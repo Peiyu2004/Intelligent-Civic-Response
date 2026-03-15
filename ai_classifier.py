@@ -41,6 +41,7 @@ Choose the CLOSEST matching category based on what you see in the photo:
   = A seriously bent or fallen streetlight pole lying on grass, road or pavement IS broken_streetlight — do NOT classify it as other just because it looks like a metal bar.
   = KEY RULE: If you see a tall metal pole that is bent or fallen near a road or pavement — even if the lamp is missing or broken off — it is broken_streetlight, NOT other.
   = CLUE: Streetlight poles are usually round or cylindrical metal tubes, grey or black, and are taller than a person. They are found along roads, pavements and car parks.
+  = it is not neccessary to see the lamp bend, doesn't turn on when night also counts, if didn't see bend or leaning, don't describe it
 
 - cracked_pavement
   = Use this for ANY road or pavement surface that is cracked, split, broken or fractured — including serious and severe cracks.
@@ -148,46 +149,91 @@ EXAMPLE SCENARIOS:
 ====================
 STEP 2 — ESTIMATE SEVERITY SCORE (1–10)
 ====================
-Give an INTEGER score from 1 to 10 based on BOTH the visual severity AND the safety risk:
+Give an INTEGER score from 1 to 10 based on BOTH the visual severity AND the safety risk.
+ALWAYS apply the ROAD BLOCKING RULE from STEP 1 for your category first, then use these guidelines:
 
-SCORE 1–3 (LOW) — Minor, cosmetic, no immediate danger:
+====================
+STEP 2 — ESTIMATE SEVERITY SCORE (1–10)
+====================
+BEFORE scoring, check these HARD RULES first — they override everything:
+- If a CAR is visible in the photo and the pothole is the SAME WIDTH as the car → score MUST be 10, no exceptions
+- If a CAR is visible and the pothole is HALF the car width → score MUST be 8 minimum
+- If a CAR is visible and the pothole is SAME SIZE as a car TYRE → score 4–5
+- If the pothole is smaller than a shoe → score MUST be 4 or below, no exceptions
+- If ANY damage is completely blocking the entire road → score MUST be 9 or 10
+
+ONLY after checking the hard rules above, use the general guide below...
+
+SCORE 1–3 (LOW) — Minor, cosmetic, no immediate danger, not blocking road:
 - Small surface crack less than 1cm wide
 - Faded road markings
 - Minor graffiti on a wall
-- Small pothole at road edge, less than 5cm wide
+- Small pothole at road edge, smaller than a human shoe
 - Slightly bent sign that is still readable
+- Debris or damage at road side only, not blocking traffic
 
-SCORE 4–6 (MEDIUM) — Moderate damage, needs repair within weeks:
-- Pothole 5–15cm wide in non-main road
+SCORE 4–6 (MEDIUM) — Moderate damage, needs repair within weeks, partially affecting road:
+- Pothole about the size of a human head or basketball
 - Crack wider than 1cm across pavement
 - Streetlight visibly damaged but pole still standing
 - Partial drain blockage with minor pooling
-- Sign that is tilted but partially readable
+- Sign tilted but partially readable
+- Debris blocking one lane but traffic can still pass
 
-SCORE 7–8 (HIGH) — Serious damage, needs repair within days:
-- Pothole larger than 30cm wide or deeper than 5cm
+SCORE 7–8 (HIGH) — Serious damage, needs repair within days, significantly blocking or endangering road:
+- Pothole bigger than a car tyre but smaller than half the car width
 - Large crack spanning full width of pavement
-- Streetlight completely broken or fallen
+- Streetlight completely broken or fallen at roadside
 - Significant flooding covering road surface
-- Sign completely fallen or missing on main road
+- Sign completely fallen on main road
+- Debris blocking most of the road
 
-SCORE 9–10 (CRITICAL) — Immediate danger to public safety, fix TODAY:
-- Pothole larger than 30cm wide or on highway
+SCORE 9–10 (CRITICAL) — Immediate danger, fix TODAY, road blocked or extremely dangerous:
+- Pothole same width as a car or wider — score MUST be 10, no exceptions
 - Collapsed road section
 - Exposed electrical wires from streetlight
 - Severe flooding blocking entire road
+- Any damage completely blocking the entire road
 - Multiple hazards visible in one photo
-- Sign blocking the entire road
+- Debris making road completely impassable
 
 ====================
-STEP 3 — ASSESS YOUR CONFIDENCE
+POTHOLE SIZE REFERENCE — use this when scoring potholes
 ====================
-Rate how clearly you can see the damage:
+Compare the pothole to objects visible in the photo:
 
-- high   = Image is clear, damage is obvious and easily identifiable
-- medium = Image is slightly blurry or damage is partially visible
-- low    = Image is very blurry, dark, or damage is hard to identify clearly
+COMPARE TO VEHICLE (if car or motorcycle visible):
+- Much smaller than a car tyre → score 1–3
+- About the same size as a car tyre → score 4–5
+- Bigger than a car tyre but smaller than half the car width → score 6–7
+- About half the car width → score 8
+- Same width as the full car or wider → score 10 immediately, no exceptions
+- Car wheel could completely fall into the hole → score 9–10
 
+COMPARE TO HUMAN BODY (if person visible):
+- Smaller than a human hand (under 15cm) → score 1–2
+- About the size of a hand to a shoe (15–30cm) → score 3–4
+- Bigger than a shoe, up to knee width (30–60cm) → score 5–6
+- Wider than shoulder width (60cm–1m) → score 7–8
+- Wider than a full human body → score 9–10
+
+COMPARE TO ROAD (if no person or vehicle visible):
+- Tiny spot, looks smaller than a drain cover → score 1–3
+- About the size of a drain cover → score 4–5
+- Bigger than a drain cover but less than quarter of the lane → score 6
+- Quarter to half of the lane width → score 7–8
+- More than half the lane width → score 9–10
+
+COMPARE TO ASPHALT GRAIN (if nothing else visible):
+- Asphalt grains are roughly 1–2cm each — count how many fit across the hole
+- Less than 15 grains across (under 30cm) → score 1–3, MUST NOT exceed 4
+- 15–30 grains across (30–60cm) → score 4–6
+- More than 30 grains across (over 60cm) → score 7–10
+
+HARD RULES — these override everything else:
+- Hole smaller than a shoe (under 30cm radius) → score MUST be 4 or below, no exceptions
+- Hole same width as a car → score MUST be 10, no exceptions
+- Hole wider than a car tyre but smaller than car → score 6–8
 ====================
 STEP 4 — DETERMINE URGENCY
 ====================
@@ -222,7 +268,7 @@ SPECIAL CASE — If the photo does NOT show any infrastructure damage:
 
 TYPE_WEIGHT = {
     "flooded_drain":       0,   # immediate public danger
-    "broken_streetlight": +1,   # safety risk especially at night
+    "broken_streetlight": -1,   # safety risk especially at night
     "fallen_sign":         0,   # traffic safety risk
     "worn_road_marking":  +1,   # general road hazard
     "pothole":             0,   # neutral, scored by size
