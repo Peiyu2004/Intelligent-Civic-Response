@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: http://127.0.0.1:5000/api/upload
+  method: POST
+  headers:
+    Accept: application/json
+  body:
+    type: formdata
+    content:
+      - type: file
+        key: file
+        src:
+          - postman-cloud:///1f11fbe1-16e6-41d0-87f9-f2ae548928d1
+        disabled: false
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    server: Werkzeug/3.1.6 Python/3.11.3
+    date: Sat, 14 Mar 2026 15:57:34 GMT
+    content-type: application/json
+    content-length: "93"
+    access-control-allow-origin: "*"
+    connection: close
+  body:
+    type: json
+    content: >
+      {
+        "image_path": "uploads/C_Users_peiyu_Postman_files_cloudFiles_RZEIzrC9B_roadCrack.jpg"
+      }
+order: 1773503934404
