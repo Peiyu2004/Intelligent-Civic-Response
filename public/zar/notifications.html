@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Notifications - CiviScan</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .notif-box {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 680px;
+  }
+
+  .notif-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .notif-header h2 { font-size: 20px; color: #222; }
+
+  .mark-all-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
+  }
+  .mark-all-btn:hover { background: #eee; }
+
+  .notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: white;
+    border: 1px solid #e8e8e8;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+
+  .notif-item.unread { background: #f0ebff; border-color: #c9b8f5; }
+  .notif-item:hover  { background: #e8e8e8; }
+  .notif-item.unread:hover { background: #e2d9f8; }
+
+  .notif-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #7a5af8;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .notif-item.read .notif-dot { background: transparent; }
+
+  .notif-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .notif-icon.green  { background: #d4f7e0; }
+  .notif-icon.orange { background: #fde9cc; }
+  .notif-icon.red    { background: #fdd; }
+  .notif-icon.blue   { background: #d6eaff; }
+
+  .notif-body { flex: 1; }
+  .notif-title { font-weight: bold; font-size: 14px; color: #222; margin-bottom: 3px; }
+  .notif-desc  { font-size: 13px; color: #666; line-height: 1.4; }
+  .notif-time  { font-size: 12px; color: #aaa; margin-top: 4px; }
+
+  .notif-empty {
+    text-align: center; padding: 50px 20px;
+    color: #aaa; font-size: 15px;
+  }
+  .notif-empty div { font-size: 40px; margin-bottom: 10px; }
+
+  .badge {
+    display: inline-block;
+    background: #7a5af8;
+    color: white;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+</style>
+</head>
+
+<body class="dashboard-page">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">CiviScan</div>
+  <div class="top-right">
+    <div class="hover-container">
+      <button class="btn user-btn">
+        <img src="images/user.png" alt="user" width="20" height="20"> USER
+      </button>
+      <div class="popup">
+        <div class="popup-avatar"><img src="images/user.png" alt="user"></div>
+        <div class="popup-name">USER</div>
+        <div class="popup-buttons">
+          <button class="popup-btn" onclick="location.href='profile.html'">View Profile</button>
+          <button class="popup-btn" onclick="location.href='homePage.html'">Log Out</button>
+        </div>
+      </div>
+    </div>
+    <span class="icon" style="cursor:pointer" onclick="location.href='notifications.html'">
+      <img src="images/notif.png" alt="notif" width="32" height="30">
+    </span>
+    <span class="icon" style="cursor:pointer" onclick="location.href='settings.html'">
+      <img src="images/setting.png" alt="setting" width="32" height="30">
+    </span>
+  </div>
+</div>
+
+<div class="dashboard">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <a href="report.html" class="menu">
+      <img src="images/reportissue2.png" alt="report" width="42" height="35"> Report issue
+    </a>
+    <a href="issueHistory.html" class="menu">
+      <img src="images/history2.png" alt="history" width="42" height="40"> Issue History
+    </a>
+    <a href="feedback.html" class="menu">
+      <img src="images/feedback.png" alt="feedback" width="32" height="30"> Feedback
+    </a>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="notif-box">
+      <div class="notif-header">
+        <h2>🔔 Notifications <span class="badge" id="unreadBadge">0</span></h2>
+        <button class="mark-all-btn" onclick="markAllRead()">Mark all as read</button>
+      </div>
+
+      <div id="notifList">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Default system notifications — shown once, then stored in localStorage
+  var DEFAULT_NOTIFS = [
+    {
+      id: 'sys001',
+      icon: '✅', iconClass: 'green',
+      title: 'Welcome to CiviScan!',
+      desc: 'Thank you for joining. Start by reporting an infrastructure issue near you.',
+      time: 'Just now',
+      read: false
+    },
+    {
+      id: 'sys002',
+      icon: '📋', iconClass: 'blue',
+      title: 'How it works',
+      desc: 'Take a photo, enter your location, and our AI will assess the severity automatically.',
+      time: '1 min ago',
+      read: false
+    }
+  ];
+
+  function loadNotifs() {
+    // Merge stored + auto-generate from issue history
+    var stored = JSON.parse(localStorage.getItem('civiNotifs') || 'null');
+    if (!stored) {
+      stored = DEFAULT_NOTIFS.slice();
+      localStorage.setItem('civiNotifs', JSON.stringify(stored));
+    }
+
+    // Auto-add notif for each submitted report if not already added
+    var history = JSON.parse(localStorage.getItem('civiHistory') || '[]');
+    var existingIds = stored.map(function(n) { return n.id; });
+    history.forEach(function(r) {
+      var nid = 'report-' + r.report_id;
+      if (existingIds.indexOf(nid) === -1) {
+        stored.unshift({
+          id: nid,
+          icon: '📍', iconClass: 'orange',
+          title: 'Report Submitted: ' + r.report_id,
+          desc: r.issue_type.replace(/_/g,' ') + ' at ' + r.location + ' — Severity ' + r.severity + '/10.',
+          time: r.date,
+          read: false
+        });
+      }
+    });
+
+    localStorage.setItem('civiNotifs', JSON.stringify(stored));
+    renderNotifs(stored);
+  }
+
+  function renderNotifs(notifs) {
+    var list = document.getElementById('notifList');
+    var unread = notifs.filter(function(n) { return !n.read; }).length;
+    document.getElementById('unreadBadge').textContent = unread;
+    document.getElementById('unreadBadge').style.display = unread > 0 ? '' : 'none';
+
+    if (notifs.length === 0) {
+      list.innerHTML = '<div class="notif-empty"><div>🔕</div>No notifications yet</div>';
+      return;
+    }
+
+    list.innerHTML = '';
+    notifs.forEach(function(n, i) {
+      var div = document.createElement('div');
+      div.className = 'notif-item ' + (n.read ? 'read' : 'unread');
+      div.innerHTML =
+        '<div class="notif-dot"></div>' +
+        '<div class="notif-icon ' + n.iconClass + '">' + n.icon + '</div>' +
+        '<div class="notif-body">' +
+          '<div class="notif-title">' + n.title + '</div>' +
+          '<div class="notif-desc">' + n.desc + '</div>' +
+          '<div class="notif-time">' + n.time + '</div>' +
+        '</div>';
+      div.onclick = function() { markRead(i); };
+      list.appendChild(div);
+    });
+  }
+
+  function markRead(index) {
+    var notifs = JSON.parse(localStorage.getItem('civiNotifs') || '[]');
+    if (notifs[index]) notifs[index].read = true;
+    localStorage.setItem('civiNotifs', JSON.stringify(notifs));
+    renderNotifs(notifs);
+  }
+
+  function markAllRead() {
+    var notifs = JSON.parse(localStorage.getItem('civiNotifs') || '[]');
+    notifs.forEach(function(n) { n.read = true; });
+    localStorage.setItem('civiNotifs', JSON.stringify(notifs));
+    renderNotifs(notifs);
+  }
+
+  loadNotifs();
+</script>
+</body>
+</html>
