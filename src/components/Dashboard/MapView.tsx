@@ -47,9 +47,9 @@ export const MapView: React.FC<MapViewProps> = ({
     });
 
   return (
-    <div className="bg-white rounded-lg">
+    <div className="bg-white rounded-lg p-5">
       {/* Legend + Title */}
-      <div className="mb-4 flex justify-between items-center text-sm">
+      <div className="p-3 flex justify-between items-center text-sm">
         {/* Title on the left */}
         <h2 className="text-2xl font-black">Report Map View</h2>
 
