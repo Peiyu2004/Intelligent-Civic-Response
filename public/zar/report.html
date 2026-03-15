@@ -69,17 +69,25 @@
   <div class="content">
 
     <!-- IMAGE UPLOAD -->
+
     <div class="box">
-      <h3>Image Upload:</h3>
-      <div class="upload-row">
-        <img src="road.jpg" class="upload-img" id="preview">
-        <label for="fileUpload" class="upload-btn">
-          &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp+
-          <br>
-          Add Image
-        </label>
-        <input type="file" id="fileUpload" accept="image/*" hidden>
-      </div>
+
+    <h3>Image Upload:</h3>
+
+    <div class="upload-row">
+
+    <img src="images/example.png" class="upload-img" id="preview">
+
+    <label for="fileUpload" class="upload-btn">
+    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp+
+    <br>
+    Add Image
+    </label>
+
+    <input type="file" id="fileUpload" accept="image/*" hidden>
+
+    </div>
+
     </div>
 
     <!-- LOCATION -->
@@ -149,6 +157,53 @@
       .bindPopup("Red pin at (" + lat.toFixed(4) + ", " + lng.toFixed(4) + ")") // Show the coordinates in the popup
       .openPopup();
   });
+</script>
+
+<script>
+
+const fileInput = document.getElementById("fileUpload");
+const preview = document.getElementById("preview");
+
+let uploadedImagePath = "";
+
+// When user selects image
+fileInput.addEventListener("change", async function () {
+
+    const file = this.files[0];
+
+    if (!file) return;
+
+    // -------------------
+    // Show preview locally
+    // -------------------
+    preview.src = URL.createObjectURL(file);
+
+
+    // -------------------
+    // Upload to Flask
+    // -------------------
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+
+        const res = await fetch("http://127.0.0.1:5000/api/upload", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await res.json();
+
+        console.log(data);
+
+        uploadedImagePath = data.image_path;
+
+    } catch (err) {
+        console.error(err);
+    }
+
+});
+
 </script>
 
 </body>
