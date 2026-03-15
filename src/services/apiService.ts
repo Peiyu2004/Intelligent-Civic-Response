@@ -616,6 +616,7 @@ class ApiService {
   private transformWorkOrder(dbOrder: any): WorkOrder {
     return {
       id: dbOrder.workorder_id?.toString() || dbOrder.id || "",
+      cluster_id: dbOrder.cluster_id?.toString() || "", // ✅ MAKE SURE THIS IS SET
       priorityLevel: dbOrder.priority_level || 0,
       assignedTeam: dbOrder.assigned_team || "",
       totalReports: dbOrder.total_report || 0,

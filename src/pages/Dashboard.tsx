@@ -36,6 +36,14 @@ export const Dashboard: React.FC = () => {
 
   // Function to fetch all data
   const fetchData = async () => {
+    <PriorityWorkOrder
+      workOrders={workOrders}
+      reports={reports} // ✅ ADD THIS
+      clusters={clusters} // ✅ ADD THIS
+      onViewAllReports={handleViewAllReports}
+      onClusterClick={handleClusterClick}
+    />;
+
     try {
       setLoading(true);
       setError(null);
