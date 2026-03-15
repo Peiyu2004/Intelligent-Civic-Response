@@ -71,7 +71,7 @@ export const MapView: React.FC<MapViewProps> = ({
       </div>
 
       {/* Map */}
-      <div className="h-96 w-full rounded-lg overflow-hidden border-2 border-gray-300">
+      <div className="h-96 w-full rounded-lg overflow-hidden border-2 border-gray-300 z-0 relative">
         <MapContainer
           center={defaultCenter}
           zoom={zoom}

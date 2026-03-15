@@ -12,7 +12,7 @@ export const ReportDetailCard: React.FC<ReportDetailCardProps> = ({
   onViewDetail,
 }) => {
   return (
-    <div className="bg-white h-full rounded-3xl border-2 border-black p-6 shadow-lg">
+    <div className="bg-white h-full rounded-3xl border-2 border-black p-6 shadow-lg z-10 relative">
       <div className="flex items-start justify-between mb-10">
         <div className="flex items-center gap-4">
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-4xl">
