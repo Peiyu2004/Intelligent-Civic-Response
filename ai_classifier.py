@@ -264,7 +264,13 @@ SPECIAL CASE — If the photo does NOT show any infrastructure damage:
   "description": "No infrastructure damage detected in this image.",
   "urgency": "low",
   "recommended_action": "No action required. Please resubmit with a clearer photo of the damage."
-}"""
+}
+RULES FOR secondary_issues:
+- List every OTHER damage type you see that is NOT the primary issue
+- If only ONE type of damage is visible, set secondary_issues to an empty array: []
+- Each secondary issue must have its own damage_type, description, and recommended_action
+- Do NOT repeat the primary issue in secondary_issues
+- Order secondary_issues from most to least severe """
 
 TYPE_WEIGHT = {
     "flooded_drain":       0,   # immediate public danger

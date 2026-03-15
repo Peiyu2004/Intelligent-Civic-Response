@@ -4,9 +4,34 @@
 <meta charset="UTF-8">
 <title>CiviScan Feedback</title>
 <link rel="stylesheet" href="style.css">
+<style>
+  .toast {
+    display: none;
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a7a40;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show {
+    display: block;
+    opacity: 1;
+  }
+</style>
 </head>
 
 <body class="dashboard-page">
+<div class="toast" id="toast">✅ Feedback Submitted!</div>
 
 <!-- TOP BAR -->
 <div class="topbar">
@@ -25,13 +50,17 @@
     <div class="popup-avatar"><img src="images/user.png" alt="user"></div>
         <div class="popup-name">USER</div>
         <div class="popup-buttons">
-          <button class="popup-btn">View Profile</button>
+          <button class="popup-btn" onclick="location.href='profile.html'">View Profile</button>
           <button class="popup-btn" onclick="location.href='homePage.html'">Log Out</button>
         </div>
   </div>
 </div> 
-    <span class="icon"><img src="images/notif.png" alt="notif" width="32" height="30"></span>
-    <span class="icon"><img src="images/setting.png" alt="setting" width="32" height="30"></span>
+    <span class="icon" style="cursor:pointer" onclick="location.href='notifications.html'">
+      <img src="images/notif.png" alt="notif" width="32" height="30">
+    </span>
+    <span class="icon" style="cursor:pointer" onclick="location.href='settings.html'">
+      <img src="images/setting.png" alt="setting" width="32" height="30">
+    </span>
   </div>
 </div>
 
@@ -79,9 +108,14 @@
       <textarea class="feedback-text"></textarea>
 
       <div class="submit-area">
-        <button class="submit-btn" onclick="location.href = 'index.html'">
-         Submit feedback
+        <button class="submit-btn" id="submitFeedbackBtn" onclick="submitFeedback()">
+          Submit feedback
         </button>
+        <div id="feedbackSuccess" style="display:none; margin-top:16px; text-align:center;
+             background:#d4f7e0; color:#1a7a40; padding:12px 20px; border-radius:10px;
+             font-weight:bold; font-size:15px;">
+          ✅ Feedback submitted! Thank you.
+        </div>
       </div>
 
     </div> <!-- feedback-box -->
@@ -110,6 +144,22 @@
       rate.classList.add('selected');
     });
   });
+
+  // SUBMIT FEEDBACK
+  function submitFeedback() {
+    var btn = document.getElementById('submitFeedbackBtn');
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+
+    // Show toast
+    var toast = document.getElementById('toast');
+    toast.classList.add('show');
+
+    setTimeout(function() {
+      toast.classList.remove('show');
+      location.href = 'report.html';
+    }, 1800);
+  }
 </script>
 
 </body>

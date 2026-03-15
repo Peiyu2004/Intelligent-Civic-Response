@@ -42,13 +42,17 @@
         <div class="popup-avatar"><img src="images/user.png" alt="user"></div>
         <div class="popup-name">USER</div>
         <div class="popup-buttons">
-          <button class="popup-btn">View Profile</button>
+          <button class="popup-btn" onclick="location.href='profile.html'">View Profile</button>
           <button class="popup-btn" onclick="location.href='homePage.html'">Log Out</button>
         </div>
       </div>
     </div>
-    <span class="icon"><img src="images/notif.png" alt="notif" width="32" height="30"></span>
-    <span class="icon"><img src="images/setting.png" alt="setting" width="32" height="30"></span>
+    <span class="icon" style="cursor:pointer" onclick="location.href='notifications.html'">
+      <img src="images/notif.png" alt="notif" width="32" height="30">
+    </span>
+    <span class="icon" style="cursor:pointer" onclick="location.href='settings.html'">
+      <img src="images/setting.png" alt="setting" width="32" height="30">
+    </span>
   </div>
 </div>
 
@@ -169,6 +173,27 @@
   }
 
   function submitDone() {
+    // Save report to localStorage history
+    var raw = sessionStorage.getItem('civiResult');
+    if (raw) {
+      var data = JSON.parse(raw);
+      var ai = data.ai_analysis;
+      var wo = data.work_order;
+
+      var record = {
+        report_id:   wo.WORK_ORDER_ID || ('WO-' + Date.now()),
+        location:    ai.location || '—',
+        issue_type:  (ai.damage_type || 'other').replace(/_/g,' '),
+        severity:    ai.severity_score || 0,
+        date:        new Date().toLocaleDateString('en-GB').replace(/\//g,'.'),
+        status:      'In Progress'
+      };
+
+      var history = JSON.parse(localStorage.getItem('civiHistory') || '[]');
+      history.unshift(record); // newest first
+      localStorage.setItem('civiHistory', JSON.stringify(history));
+    }
+
     sessionStorage.removeItem('civiResult');
     location.href = 'issueHistory.html';
   }

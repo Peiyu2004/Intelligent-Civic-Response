@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Settings - CiviScan</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .settings-box {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 620px;
+  }
+
+  .settings-section {
+    margin-bottom: 28px;
+  }
+
+  .settings-section h3 {
+    font-size: 13px;
+    font-weight: bold;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .setting-row:last-child { border-bottom: none; }
+
+  .setting-label { font-size: 15px; color: #222; }
+  .setting-sub   { font-size: 12px; color: #999; margin-top: 2px; }
+
+  /* Toggle switch */
+  .toggle {
+    position: relative;
+    width: 44px; height: 24px;
+    flex-shrink: 0;
+  }
+  .toggle input { display: none; }
+  .toggle-slider {
+    position: absolute; inset: 0;
+    background: #ccc;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle-slider:before {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: white;
+    top: 3px; left: 3px;
+    transition: transform 0.2s;
+  }
+  .toggle input:checked + .toggle-slider { background: #7a5af8; }
+  .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+  /* Select dropdown */
+  .setting-select {
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+  }
+
+  /* Danger zone */
+  .danger-btn {
+    width: 100%;
+    padding: 11px;
+    border-radius: 10px;
+    border: 1.5px solid #e74c3c;
+    background: white;
+    color: #e74c3c;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+  }
+  .danger-btn:hover { background: #fdecea; }
+
+  .save-settings-btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(45deg, #6a00ff, #c300ff);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+  .save-settings-btn:hover { opacity: 0.88; }
+
+  .save-notice {
+    display: none;
+    text-align: center;
+    color: #27ae60;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+</style>
+</head>
+
+<body class="dashboard-page">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">CiviScan</div>
+  <div class="top-right">
+    <div class="hover-container">
+      <button class="btn user-btn">
+        <img src="images/user.png" alt="user" width="20" height="20"> USER
+      </button>
+      <div class="popup">
+        <div class="popup-avatar"><img src="images/user.png" alt="user"></div>
+        <div class="popup-name">USER</div>
+        <div class="popup-buttons">
+          <button class="popup-btn" onclick="location.href='profile.html'">View Profile</button>
+          <button class="popup-btn" onclick="location.href='homePage.html'">Log Out</button>
+        </div>
+      </div>
+    </div>
+    <span class="icon" style="cursor:pointer" onclick="location.href='notifications.html'">
+      <img src="images/notif.png" alt="notif" width="32" height="30">
+    </span>
+    <span class="icon" style="cursor:pointer" onclick="location.href='settings.html'">
+      <img src="images/setting.png" alt="setting" width="32" height="30">
+    </span>
+  </div>
+</div>
+
+<div class="dashboard">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <a href="report.html" class="menu">
+      <img src="images/reportissue2.png" alt="report" width="42" height="35"> Report issue
+    </a>
+    <a href="issueHistory.html" class="menu">
+      <img src="images/history2.png" alt="history" width="42" height="40"> Issue History
+    </a>
+    <a href="feedback.html" class="menu">
+      <img src="images/feedback.png" alt="feedback" width="32" height="30"> Feedback
+    </a>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="settings-box">
+
+      <!-- Notifications -->
+      <div class="settings-section">
+        <h3>🔔 Notifications</h3>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Report Status Updates</div>
+            <div class="setting-sub">Get notified when your report status changes</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="togStatusUpdates" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">New Report Submitted</div>
+            <div class="setting-sub">Notify when a report is successfully submitted</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="togNewReport" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">System Announcements</div>
+            <div class="setting-sub">Important updates from CiviScan</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="togAnnouncements">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="settings-section">
+        <h3>🎨 Appearance</h3>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Language</div>
+            <div class="setting-sub">Choose your display language</div>
+          </div>
+          <select class="setting-select" id="selectLang">
+            <option value="en">English</option>
+            <option value="ms">Bahasa Malaysia</option>
+            <option value="zh">中文</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Map Default Location</div>
+            <div class="setting-sub">Starting location when opening the map</div>
+          </div>
+          <select class="setting-select" id="selectMapDefault">
+            <option value="kl">Kuala Lumpur</option>
+            <option value="pj">Petaling Jaya</option>
+            <option value="kajang">Kajang</option>
+            <option value="klang">Klang</option>
+            <option value="subang">Subang Jaya</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Privacy -->
+      <div class="settings-section">
+        <h3>🔒 Privacy</h3>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Share Location with Reports</div>
+            <div class="setting-sub">Attach GPS coordinates to your reports</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="togShareLocation" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Anonymous Reporting</div>
+            <div class="setting-sub">Submit reports without attaching your name</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="togAnonymous">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="settings-section">
+        <h3>⚠️ Data</h3>
+        <button class="danger-btn" onclick="clearReportHistory()">🗑️ Clear Report History</button>
+        <button class="danger-btn" onclick="clearAllData()">⛔ Clear All My Data</button>
+      </div>
+
+      <button class="save-settings-btn" onclick="saveSettings()">Save Settings</button>
+      <div class="save-notice" id="saveNotice">✅ Settings saved!</div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Load saved settings ──────────────────────────────────
+  function loadSettings() {
+    var s = JSON.parse(localStorage.getItem('civiSettings') || '{}');
+    setToggle('togStatusUpdates', s.statusUpdates !== false);
+    setToggle('togNewReport',     s.newReport     !== false);
+    setToggle('togAnnouncements', s.announcements === true);
+    setToggle('togShareLocation', s.shareLocation !== false);
+    setToggle('togAnonymous',     s.anonymous     === true);
+    if (s.lang)       document.getElementById('selectLang').value       = s.lang;
+    if (s.mapDefault) document.getElementById('selectMapDefault').value = s.mapDefault;
+  }
+
+  function setToggle(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.checked = val;
+  }
+
+  // ── Save settings ────────────────────────────────────────
+  function saveSettings() {
+    var s = {
+      statusUpdates: document.getElementById('togStatusUpdates').checked,
+      newReport:     document.getElementById('togNewReport').checked,
+      announcements: document.getElementById('togAnnouncements').checked,
+      shareLocation: document.getElementById('togShareLocation').checked,
+      anonymous:     document.getElementById('togAnonymous').checked,
+      lang:          document.getElementById('selectLang').value,
+      mapDefault:    document.getElementById('selectMapDefault').value
+    };
+    localStorage.setItem('civiSettings', JSON.stringify(s));
+    var notice = document.getElementById('saveNotice');
+    notice.style.display = 'block';
+    setTimeout(function() { notice.style.display = 'none'; }, 2500);
+  }
+
+  // ── Danger zone ──────────────────────────────────────────
+  function clearReportHistory() {
+    if (confirm('This will delete all your submitted report history. Continue?')) {
+      localStorage.removeItem('civiHistory');
+      localStorage.removeItem('civiNotifs');
+      alert('Report history cleared.');
+    }
+  }
+
+  function clearAllData() {
+    if (confirm('This will delete ALL your CiviScan data including profile, history and settings. Continue?')) {
+      ['civiHistory','civiNotifs','civiSettings','civiProfile'].forEach(function(k) {
+        localStorage.removeItem(k);
+      });
+      alert('All data cleared.');
+      location.href = 'index.html';
+    }
+  }
+
+  loadSettings();
+</script>
+</body>
+</html>
