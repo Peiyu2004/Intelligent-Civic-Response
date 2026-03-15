@@ -4,7 +4,10 @@ import apiConfig from "../config/api.ts";
 class ApiService {
   private baseURL = apiConfig.baseURL;
   private headers = apiConfig.headers;
+<<<<<<< HEAD
+=======
   private isServerAvailable = true; // Track if server is responding
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
 
   /**
    * Generic fetch method with error handling
@@ -23,6 +26,13 @@ class ApiService {
       });
 
       if (!response.ok) {
+<<<<<<< HEAD
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+=======
         console.error(
           `API Response not OK: ${response.status} ${response.statusText}`,
         );
@@ -45,11 +55,57 @@ class ApiService {
       return data;
     } catch (error) {
       this.isServerAvailable = false;
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
       console.error("API Error:", error);
       throw error;
     }
   }
 
+<<<<<<< HEAD
+  // Reports API
+  async getReports(): Promise<Report[]> {
+    return this.fetch<Report[]>("/reports");
+  }
+
+  async getReportsByCluster(clusterId: string): Promise<Report[]> {
+    return this.fetch<Report[]>(`/reports?clusterId=${clusterId}`);
+  }
+
+  async getReportById(reportId: string): Promise<Report> {
+    return this.fetch<Report>(`/reports/${reportId}`);
+  }
+
+  async updateReportStatus(
+    reportId: string,
+    status: "in progress" | "completed",
+  ): Promise<Report> {
+    return this.fetch<Report>(`/reports/${reportId}`, {
+      method: "PUT",
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  // Clusters API
+  async getClusters(): Promise<Cluster[]> {
+    return this.fetch<Cluster[]>("/clusters");
+  }
+
+  async getClusterById(clusterId: string): Promise<Cluster> {
+    return this.fetch<Cluster>(`/clusters/${clusterId}`);
+  }
+
+  // Work Orders API
+  async getWorkOrders(): Promise<WorkOrder[]> {
+    return this.fetch<WorkOrder[]>("/work-orders");
+  }
+
+  // Issue Type Chart API
+  async getIssueTypeData(): Promise<IssueTypeData[]> {
+    return this.fetch<IssueTypeData[]>("/issue-types");
+  }
+
+  // Dashboard Stats API
+=======
   /**
    * Check if server is available
    */
@@ -390,12 +446,19 @@ class ApiService {
   /**
    * Get dashboard statistics
    */
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
   async getDashboardStats(): Promise<{
     totalReports: number;
     highSeverityReports: number;
     workOrdersCount: number;
     clusterCount: number;
   }> {
+<<<<<<< HEAD
+    return this.fetch("/dashboard/stats");
+  }
+
+  // Filter Reports API
+=======
     try {
       const reports = await this.getReports();
       const clusters = await this.getClusters();
@@ -504,10 +567,22 @@ class ApiService {
   //   }
   // }
 
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
   async filterReports(filters: {
     status?: string;
     severity?: string;
     location?: string;
+<<<<<<< HEAD
+    clusterId?: string;
+  }): Promise<Report[]> {
+    const params = new URLSearchParams();
+    if (filters.status) params.append("status", filters.status);
+    if (filters.severity) params.append("severity", filters.severity);
+    if (filters.location) params.append("location", filters.location);
+    if (filters.clusterId) params.append("clusterId", filters.clusterId);
+
+    return this.fetch<Report[]>(`/reports?${params.toString()}`);
+=======
     clusterId?: string; // ✅ CHANGED from number to string
   }): Promise<Report[]> {
     try {
@@ -627,6 +702,7 @@ class ApiService {
             ? "completed"
             : "in progress",
     };
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
   }
 }
 

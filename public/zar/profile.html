@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Profile - CiviScan</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .profile-box {
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 600px;
+  }
+
+  .profile-avatar-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 10px;
+  }
+
+  .profile-avatar-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #ddd;
+    border: 3px solid #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .profile-avatar-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-username {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+  }
+
+  .profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .profile-field label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .profile-field input {
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+    color: #222;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .profile-field input:focus {
+    border-color: #7a5af8;
+  }
+
+  .profile-field input:disabled {
+    background: #f0f0f0;
+    color: #888;
+    cursor: default;
+  }
+
+  .profile-divider {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 24px 0;
+  }
+
+  .profile-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    flex: 1;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .stat-card .stat-num {
+    font-size: 28px;
+    font-weight: bold;
+    color: #7a5af8;
+  }
+
+  .stat-card .stat-label {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .save-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(45deg, #6a00ff, #c300ff);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .save-btn:hover { opacity: 0.88; }
+
+  .edit-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 30px;
+    border: 2px solid #bbb;
+    background: white;
+    color: #444;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .edit-btn:hover { background: #f0f0f0; }
+
+  .save-notice {
+    display: none;
+    margin-top: 12px;
+    text-align: center;
+    color: #27ae60;
+    font-size: 14px;
+    font-weight: bold;
+  }
+</style>
+</head>
+
+<body class="dashboard-page">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">CiviScan</div>
+  <div class="top-right">
+    <div class="hover-container">
+      <button class="btn user-btn">
+        <img src="images/user.png" alt="user" width="20" height="20"> USER
+      </button>
+      <div class="popup">
+        <div class="popup-avatar"><img src="images/user.png" alt="user"></div>
+        <div class="popup-name">USER</div>
+        <div class="popup-buttons">
+          <button class="popup-btn" onclick="location.href='profile.html'">View Profile</button>
+          <button class="popup-btn" onclick="location.href='homePage.html'">Log Out</button>
+        </div>
+      </div>
+    </div>
+    <span class="icon" style="cursor:pointer" onclick="location.href='notifications.html'">
+      <img src="images/notif.png" alt="notif" width="32" height="30">
+    </span>
+    <span class="icon" style="cursor:pointer" onclick="location.href='settings.html'">
+      <img src="images/setting.png" alt="setting" width="32" height="30">
+    </span>
+  </div>
+</div>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <a href="report.html" class="menu">
+      <img src="images/reportissue2.png" alt="report" width="42" height="35"> Report issue
+    </a>
+    <a href="issueHistory.html" class="menu">
+      <img src="images/history2.png" alt="history" width="42" height="40"> Issue History
+    </a>
+    <a href="feedback.html" class="menu">
+      <img src="images/feedback.png" alt="feedback" width="32" height="30"> Feedback
+    </a>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="profile-box">
+
+      <!-- Avatar + name -->
+      <div class="profile-avatar-area">
+        <div class="profile-avatar-circle">
+          <img src="images/user.png" alt="avatar" id="avatarImg">
+        </div>
+        <div class="profile-username" id="displayName">USER</div>
+      </div>
+
+      <!-- Stats from history -->
+      <div class="profile-stats">
+        <div class="stat-card">
+          <div class="stat-num" id="statTotal">0</div>
+          <div class="stat-label">Reports Submitted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statProgress">0</div>
+          <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statDone">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+
+      <hr class="profile-divider">
+
+      <!-- Editable fields -->
+      <div class="profile-field">
+        <label>Full Name</label>
+        <input type="text" id="fieldName" placeholder="Enter your name" disabled>
+      </div>
+
+      <div class="profile-field">
+        <label>Email</label>
+        <input type="email" id="fieldEmail" placeholder="Enter your email" disabled>
+      </div>
+
+      <div class="profile-field">
+        <label>Phone Number</label>
+        <input type="tel" id="fieldPhone" placeholder="Enter your phone number" disabled>
+      </div>
+
+      <div class="profile-field">
+        <label>Address</label>
+        <input type="text" id="fieldAddress" placeholder="Enter your address" disabled>
+      </div>
+
+      <div class="btn-row">
+        <button class="edit-btn" id="editBtn" onclick="toggleEdit()">✏️ Edit Profile</button>
+        <button class="save-btn" id="saveBtn" onclick="saveProfile()" style="display:none;">💾 Save Changes</button>
+      </div>
+
+      <div class="save-notice" id="saveNotice">✅ Profile saved successfully!</div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  var isEditing = false;
+
+  // ── Load profile from localStorage ──────────────────────
+  function loadProfile() {
+    var p = JSON.parse(localStorage.getItem('civiProfile') || '{}');
+    document.getElementById('fieldName').value    = p.name    || '';
+    document.getElementById('fieldEmail').value   = p.email   || '';
+    document.getElementById('fieldPhone').value   = p.phone   || '';
+    document.getElementById('fieldAddress').value = p.address || '';
+
+    var displayName = p.name || 'USER';
+    document.getElementById('displayName').textContent = displayName;
+
+    // Update topbar popup name too
+    var popupName = document.querySelector('.popup-name');
+    if (popupName) popupName.textContent = displayName;
+  }
+
+  // ── Load stats from history ──────────────────────────────
+  function loadStats() {
+    var history = JSON.parse(localStorage.getItem('civiHistory') || '[]');
+    var total    = history.length;
+    var progress = history.filter(function(r) { return r.status === 'In Progress'; }).length;
+    var done     = history.filter(function(r) { return r.status === 'Completed'; }).length;
+
+    document.getElementById('statTotal').textContent    = total;
+    document.getElementById('statProgress').textContent = progress;
+    document.getElementById('statDone').textContent     = done;
+  }
+
+  // ── Toggle edit mode ─────────────────────────────────────
+  function toggleEdit() {
+    isEditing = true;
+    var fields = ['fieldName','fieldEmail','fieldPhone','fieldAddress'];
+    fields.forEach(function(id) {
+      document.getElementById(id).disabled = false;
+    });
+    document.getElementById('editBtn').style.display = 'none';
+    document.getElementById('saveBtn').style.display = '';
+    document.getElementById('saveNotice').style.display = 'none';
+    document.getElementById('fieldName').focus();
+  }
+
+  // ── Save profile ─────────────────────────────────────────
+  function saveProfile() {
+    var p = {
+      name:    document.getElementById('fieldName').value.trim(),
+      email:   document.getElementById('fieldEmail').value.trim(),
+      phone:   document.getElementById('fieldPhone').value.trim(),
+      address: document.getElementById('fieldAddress').value.trim()
+    };
+    localStorage.setItem('civiProfile', JSON.stringify(p));
+
+    // Update display name
+    var displayName = p.name || 'USER';
+    document.getElementById('displayName').textContent = displayName;
+    var popupName = document.querySelector('.popup-name');
+    if (popupName) popupName.textContent = displayName;
+
+    // Lock fields again
+    var fields = ['fieldName','fieldEmail','fieldPhone','fieldAddress'];
+    fields.forEach(function(id) {
+      document.getElementById(id).disabled = true;
+    });
+
+    document.getElementById('saveBtn').style.display = 'none';
+    document.getElementById('editBtn').style.display = '';
+    document.getElementById('saveNotice').style.display = 'block';
+    isEditing = false;
+  }
+
+  // Init
+  loadProfile();
+  loadStats();
+</script>
+
+</body>
+</html>

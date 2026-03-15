@@ -1,24 +1,37 @@
+<<<<<<< HEAD
+import React from "react";
+import { WorkOrder } from "../../types";
+=======
 import React, { useEffect } from "react";
 import { WorkOrder, Report, Cluster } from "../../types";
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
 import { useNavigate } from "react-router-dom";
 
 interface PriorityWorkOrderProps {
   workOrders: WorkOrder[];
+<<<<<<< HEAD
+=======
   reports?: Report[];
   clusters?: Cluster[];
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
   onViewAllReports: () => void;
   onClusterClick: (clusterId: string) => void;
 }
 
 export const PriorityWorkOrder: React.FC<PriorityWorkOrderProps> = ({
   workOrders,
+<<<<<<< HEAD
+=======
   reports = [],
   clusters = [],
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
   onViewAllReports,
   onClusterClick,
 }) => {
   const navigate = useNavigate();
 
+<<<<<<< HEAD
+=======
   // ✅ DEBUG: Log work orders structure
   useEffect(() => {
     console.log("🔍 Work Orders:", workOrders);
@@ -61,6 +74,7 @@ export const PriorityWorkOrder: React.FC<PriorityWorkOrderProps> = ({
     return reportCount > 0 ? reportCount : 0;
   };
 
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
   return (
     <div className="bg-white h-full rounded-lg border border-gray-200 p-6">
       <div className="flex justify-between items-center mb-6">
@@ -95,6 +109,41 @@ export const PriorityWorkOrder: React.FC<PriorityWorkOrderProps> = ({
             </tr>
           </thead>
           <tbody>
+<<<<<<< HEAD
+            {workOrders.map((order) => (
+              <tr
+                key={order.id}
+                className="border-b border-gray-100 hover:bg-gray-50"
+              >
+                <td className="py-3 px-4 font-medium text-gray-900">
+                  {order.id}
+                </td>
+                <td className="py-3 px-4 text-gray-700">
+                  {order.priorityLevel}
+                </td>
+                <td className="py-3 px-4 text-gray-700">
+                  {order.assignedTeam}
+                </td>
+                <td
+                  className="py-3 px-4 text-blue-600 font-medium cursor-pointer hover:underline"
+                  onClick={() => onClusterClick(order.id)}
+                >
+                  {order.totalReports}
+                </td>
+                <td className="py-3 px-4">
+                  <span
+                    className={`font-medium ${
+                      order.status === "completed"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {order.status === "completed" ? "Completed" : "In Progress"}
+                  </span>
+                </td>
+              </tr>
+            ))}
+=======
             {workOrders.length > 0 ? (
               workOrders.map((order) => (
                 <tr
@@ -138,6 +187,7 @@ export const PriorityWorkOrder: React.FC<PriorityWorkOrderProps> = ({
                 </td>
               </tr>
             )}
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
           </tbody>
         </table>
       </div>

@@ -1,6 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
+  <meta charset="UTF-8">
+  <title>AI Analysis Result - CiviScan</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .secondary-issues { margin-top: 16px; }
+    .secondary-issue-item {
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px; padding: 10px 14px; margin-top: 8px;
+    }
+    .secondary-issue-item strong { display: block; margin-bottom: 4px; font-size: 15px; }
+    .secondary-issue-item p { margin: 2px 0; font-size: 14px; opacity: 0.9; }
+    .no-result {
+      text-align: center; padding: 40px;
+      background: rgba(255,255,255,0.15); border-radius: 16px;
+      margin: 40px auto; max-width: 500px;
+    }
+    .score-circle { font-size: 48px; }
+    .urgency-badge {
+      display: inline-block; padding: 5px 18px;
+      border-radius: 20px; font-weight: bold;
+      font-size: 15px; margin-bottom: 12px;
+    }
+    .urgency-immediate { background: #c0392b; }
+    .urgency-high      { background: #e74c3c; }
+    .urgency-medium    { background: #e67e22; }
+    .urgency-low       { background: #27ae60; }
+  </style>
+</head>
+<body class="dashboard-page">
+
+<div class="topbar">
+  <div class="logo">CiviScan</div>
+  <div class="top-right">
+    <div class="hover-container">
+      <button class="btn user-btn">
+        <img src="images/user.png" alt="user" width="20" height="20"> USER
+      </button>
+      <div class="popup">
+        <div class="popup-avatar"><img src="images/user.png" alt="user"></div>
+        <div class="popup-name">USER</div>
+        <div class="popup-buttons">
+          <button class="popup-btn" onclick="location.href='profile.html'">View Profile</button>
+          <button class="popup-btn" onclick="location.href='homePage.html'">Log Out</button>
+        </div>
+      </div>
+    </div>
+    <span class="icon" style="cursor:pointer" onclick="location.href='notifications.html'">
+      <img src="images/notif.png" alt="notif" width="32" height="30">
+    </span>
+    <span class="icon" style="cursor:pointer" onclick="location.href='settings.html'">
+      <img src="images/setting.png" alt="setting" width="32" height="30">
+    </span>
+  </div>
+</div>
+
+<div class="dashboard">
+  <div class="sidebar">
+    <div class="menu active">
+      <img src="images/reportissue2.png" alt="report" width="42" height="35">Report issue
+    </div>
+    <a href="issueHistory.html" class="menu">
+      <img src="images/history2.png" alt="history" width="42" height="40"> Issue History
+    </a>
+    <a href="feedback.html" class="menu">
+      <img src="images/feedback.png" alt="feedback" width="32" height="30"> Feedback
+    </a>
+  </div>
+
+  <div class="content center-content" id="mainContent">
+    <!-- Filled by JS below -->
+  </div>
+</div>
+
+<script>
+  const raw = sessionStorage.getItem('civiResult');
+
+  if (!raw) {
+    // No data — user came here directly without submitting
+    document.getElementById('mainContent').innerHTML = `
+      <div class="no-result">
+        <h2>No analysis found</h2>
+        <p style="margin:14px 0">Please go back and submit an image first.</p>
+        <button class="start-btn" onclick="location.href='report.html'">Go to Report</button>
+      </div>`;
+  } else {
+    const data      = JSON.parse(raw);
+    const ai        = data.ai_analysis;
+    const wo        = data.work_order;
+    const score     = ai.severity_score;
+    const dtype     = (ai.damage_type || 'unknown').replace(/_/g, ' ');
+    const urgency   = (ai.urgency || 'low').toLowerCase();
+    const secondary = ai.secondary_issues || [];
+
+    // Score bar fill %
+    const fillPct = (score / 10) * 100;
+
+    // Urgency label colours
+    const urgencyClass = 'urgency-' + urgency;
+    const urgencyLabel = urgency.charAt(0).toUpperCase() + urgency.slice(1);
+
+    // Priority label colour for the bottom bar
+    const priorityNum = wo.PRIORITY || 4;
+
+    // Secondary issues HTML
+    let secondaryHTML = '';
+    if (secondary.length > 0) {
+      secondaryHTML = `
+        <div class="secondary-issues">
+          <strong>⚠️ Additional Issues Detected (${secondary.length}):</strong>
+          ${secondary.map(s => `
+            <div class="secondary-issue-item">
+              <strong>🔸 ${s.damage_type.replace(/_/g,' ').toUpperCase()}</strong>
+              <p>${s.description}</p>
+              <p>👷 ${s.recommended_action}</p>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    document.getElementById('mainContent').innerHTML = `
+      <div class="score-circle">${score}</div>
+
+      <div class="score-bar">
+        <div class="score-fill" style="width:${fillPct}%"></div>
+        <span class="score-text">${score} / 10</span>
+      </div>
+
+      <div class="box">
+        <h3>AI Analysis Result:</h3>
+
+        <span class="urgency-badge ${urgencyClass}">${urgencyLabel} Priority</span>
+
+        <p><img src="images/tick.png" width="20" height="20">
+          <strong>Primary Issue:</strong> ${dtype.toUpperCase()}
+        </p>
+        <p><img src="images/tick.png" width="20" height="20">
+          <strong>Severity Score:</strong> ${score} / 10
+        </p>
+        <p><img src="images/tick.png" width="20" height="20">
+          <strong>Confidence:</strong> ${(ai.confidence || '').toUpperCase()}
+        </p>
+        <p><img src="images/loading2.gif" width="32" height="30">
+          <strong>Description:</strong> ${ai.description || '—'}
+        </p>
+        <p><img src="images/loading2.gif" width="32" height="30">
+          <strong>Action Required:</strong> ${ai.recommended_action || '—'}
+        </p>
+        <p><img src="images/tick.png" width="20" height="20">
+          <strong>Deadline:</strong> ${wo.DEADLINE || '—'}
+        </p>
+        <p><img src="images/tick.png" width="20" height="20">
+          <strong>Location:</strong> ${ai.location || '—'}
+        </p>
+        <p><img src="images/tick.png" width="20" height="20">
+          <strong>Work Order ID:</strong> ${wo.WORK_ORDER_ID || '—'}
+        </p>
+
+        ${secondaryHTML}
+      </div>
+
+      <div class="priority">
+        <div class="p low ${priorityNum >= 4 ? 'active' : ''}">1 ~ 3 &nbsp; Low Priority</div>
+        <div class="p mid ${priorityNum === 3 ? 'active' : ''}">4 ~ 6 &nbsp; Medium Priority</div>
+        <div class="p high ${priorityNum <= 2 ? 'active' : ''}">7 ~ 10 &nbsp; High Priority</div>
+      </div>
+
+      <div class="result-buttons">
+        <button class="start-btn" onclick="location.href='report.html'">Back</button>
+        <button class="start-btn" onclick="submitDone()">Submit</button>
+      </div>`;
+  }
+
+  function submitDone() {
+    // Save report to localStorage history
+    var raw = sessionStorage.getItem('civiResult');
+    if (raw) {
+      var data = JSON.parse(raw);
+      var ai = data.ai_analysis;
+      var wo = data.work_order;
+
+      var record = {
+        report_id:   wo.WORK_ORDER_ID || ('WO-' + Date.now()),
+        location:    ai.location || '—',
+        issue_type:  (ai.damage_type || 'other').replace(/_/g,' '),
+        severity:    ai.severity_score || 0,
+        date:        new Date().toLocaleDateString('en-GB').replace(/\//g,'.'),
+        status:      'In Progress'
+      };
+
+      var history = JSON.parse(localStorage.getItem('civiHistory') || '[]');
+      history.unshift(record); // newest first
+      localStorage.setItem('civiHistory', JSON.stringify(history));
+    }
+
+    sessionStorage.removeItem('civiResult');
+    location.href = 'issueHistory.html';
+  }
+</script>
+</body>
+</html>
+=======
 <meta charset="UTF-8">
 <title>AI Analysis Result</title>
 
@@ -140,3 +341,4 @@ CiviScan
 
 </body>
 </html>
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
