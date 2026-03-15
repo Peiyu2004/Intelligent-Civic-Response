@@ -42,9 +42,7 @@
           <button class="btn" onclick="location.href = 'forgetPassword.html'">
             Forget Password
           </button>
-          <button class="btn" onclick="location.href = 'index.html'">
-            Login
-          </button>
+          <button type="submit" class="btn">Login</button>
         </div>
 
         <div class="register-row">
@@ -88,7 +86,8 @@
           const password = document.getElementById("password").value;
 
           try {
-            const response = await fetch("http://localhost:3000/api/login", {
+            // ✅ CHANGED FROM 3000 TO 5000
+            const response = await fetch("http://localhost:5000/api/login", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -102,7 +101,7 @@
             const data = await response.json();
 
             if (data.role === "admin") {
-              window.location.href = "/dashboard"; // React admin dashboard
+              window.location.href = "/zar/adminPage.html"; // React admin dashboard
             } else if (data.role === "user") {
               window.location.href = "/zar/index.html"; // User HTML portal
             } else {

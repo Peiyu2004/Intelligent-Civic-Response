@@ -81,87 +81,6 @@ def get_report(report_id):
         return jsonify(dict(row))
     else:
         return jsonify({"error": "Report not found"}), 404
- 
-
-# ==========================
-# Upload image from file
-# ==========================
-# @app.route("/api/upload", methods=["POST"])
-# def upload_and_analyze():
-#     if 'file' not in request.files:
-#         return jsonify({"error": "No file part"}), 400
-    
-#     file = request.files['file']
-#     if file.filename == '':
-#         return jsonify({"error": "No selected file"}), 400
-
-#     # Get metadata from the form (React/Postman)
-#     user_id = request.form.get("user_id", 1)
-#     location_name = request.form.get("location", "Kuala Lumpur, Malaysia")
-#     lat = request.form.get("location_lat")
-#     lon = request.form.get("location_lon")
-
-#     if file:
-#         filename = secure_filename(file.filename)
-#         save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-#         file.save(save_path)
-
-#         try:
-#             # 1. RUN THE FLEXTOKEN AI
-#             # This calls the complex logic you wrote in ai_classifier.py
-#             ai_results = process_citizen_report(save_path, location_name)
-            
-#             # Extract the cleaned data from your AI's response
-#             analysis = ai_results["ai_analysis"]
-            
-#             # 2. SAVE TO DATABASE IMMEDIATELY
-#             # This ensures the report shows up in your GET /api/reports list
-#             conn = get_connection()
-#             cursor = conn.cursor()
-#             cursor.execute("""
-#                 INSERT INTO report(
-#                     user_id, image_path, description, location,
-#                     location_lat, location_lon,
-#                     damage_type, severity_score, report_status
-#                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-#             """, (
-#                 user_id, 
-#                 f"uploads/{filename}", 
-#                 analysis["description"], 
-#                 location_name,
-#                 lat, 
-#                 lon,
-#                 analysis["damage_type"], 
-#                 analysis["severity_score"], 
-#                 "Pending"
-#             ))
-#             conn.commit()
-#             new_report_id = cursor.lastrowid
-#             conn.close()
-
-#             # 3. RETURN DATA TO FRONTEND
-#             return jsonify({
-#                 "status": "success",
-#                 "message": "AI Analysis complete and report saved!",
-#                 "report_id": new_report_id,
-#                 "ai_analysis": analysis,
-#                 "work_order": ai_results["work_order"],
-#                 "image_path": f"uploads/{filename}"
-#             }), 201
-
-#         except Exception as e:
-#             print(f"API Down, providing fallback for {filename}")
-#             # Return a fake successful response so React doesn't show an error
-#             return jsonify({
-#                 "status": "Success",
-#                 "report_id": 999, 
-#                 "ai_analysis": {
-#                     "damage_type": "pothole",
-#                     "severity_score": 5,
-#                     "description": "Local assessment: Pothole detected."
-#                     },
-#                     "image_path": f"uploads/{filename}"
-#                     }), 201
 
 
 @app.route("/api/upload", methods=["POST"])
@@ -189,7 +108,7 @@ def upload_file():
 
  
 # ==========================
-# CREATE new report
+# CREATE new report (with auto-linking to clusters)
 # ==========================
 @app.route("/api/report", methods=["POST"])
 def create_report():
@@ -204,55 +123,60 @@ def create_report():
     damage_type = data.get("damage_type", "Unknown")
     severity_score = data.get("severity_score", 0.0)
     report_status = data.get("report_status", "Pending")
+    location_lat = data.get("location_lat")  # ✅ Get coordinates
+    location_lon = data.get("location_lon")
  
     conn = get_connection()
     cursor = conn.cursor()
+    
+    # ✅ INSERT REPORT
     cursor.execute("""
         INSERT INTO report(
             user_id, image_path, description, location,
-            damage_type, severity_score, report_status
-        ) VALUES (?,?,?,?,?,?,?)
-    """, (user_id, image_path, description, location, damage_type, severity_score, report_status))
-    conn.commit()
+            location_lat, location_lon, damage_type, severity_score, report_status
+        ) VALUES (?,?,?,?,?,?,?,?,?)
+    """, (user_id, image_path, description, location, location_lat, location_lon, damage_type, severity_score, report_status))
+    
     report_id = cursor.lastrowid
+    
+    # ✅ AUTO-LINK TO NEAREST CLUSTER
+    if location_lat and location_lon:
+        try:
+            clusters = cursor.execute("""
+                SELECT cluster_id, center_lat, center_lon 
+                FROM damage_cluster
+            """).fetchall()
+            
+            if clusters:
+                nearest_cluster_id = None
+                nearest_distance = float('inf')
+                
+                for cluster in clusters:
+                    cluster_lat = float(cluster["center_lat"])
+                    cluster_lon = float(cluster["center_lon"])
+                    distance = haversine(float(location_lat), float(location_lon), cluster_lat, cluster_lon)
+                    
+                    if distance < nearest_distance:
+                        nearest_distance = distance
+                        nearest_cluster_id = cluster["cluster_id"]
+                
+                if nearest_cluster_id:
+                    cursor.execute("""
+                        UPDATE report 
+                        SET cluster_id = ? 
+                        WHERE report_id = ?
+                    """, (nearest_cluster_id, report_id))
+                    print(f"✅ Auto-linked report {report_id} to cluster {nearest_cluster_id} (distance: {nearest_distance:.2f}km)")
+        except Exception as e:
+            print(f"⚠️ Error auto-linking report: {e}")
+    
+    conn.commit()
     conn.close()
  
     return jsonify({"message": "Report created", "report_id": report_id}), 201
- 
- 
-# # ==========================
-# # UPDATE report
-# # ==========================
-# @app.route("/api/report/<int:report_id>", methods=["PUT", "PATCH"])
-# def edit_report(report_id):
-#     data = request.get_json()
-#     if not data:
-#         return jsonify({"error": "No data provided"}), 400
- 
-#     fields = ["description", "location", "image_path", "damage_type", "severity_score", "report_status"]
-#     updates = {k: data[k] for k in fields if k in data}
- 
-#     if not updates:
-#         return jsonify({"error": "No fields to update"}), 400
- 
-#     conn = get_connection()
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT * FROM report WHERE report_id = ?", (report_id,))
-#     if not cursor.fetchone():
-#         conn.close()
-#         return jsonify({"error": "Report not found"}), 404
- 
-#     set_clause = ", ".join([f"{k}=?" for k in updates.keys()])
-#     values = list(updates.values())
-#     values.append(report_id)
-#     cursor.execute(f"UPDATE report SET {set_clause} WHERE report_id = ?", values)
-#     conn.commit()
-#     conn.close()
- 
-#     return jsonify({"message": f"Report {report_id} updated", "updated_fields": updates})
- 
 
- # ==========================
+ 
+# ==========================
 # UPDATE report
 # ==========================
 @app.route("/api/report/<int:report_id>", methods=["PUT", "PATCH"])
@@ -316,7 +240,7 @@ def get_clusters():
     return jsonify([dict(row) for row in rows])
  
 
- # Helper function to calculate distance between two lat/lng points (km)
+# Helper function to calculate distance between two lat/lng points (km)
 def haversine(lat1, lon1, lat2, lon2):
     lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
     dlat = lat2 - lat1
@@ -559,6 +483,78 @@ def login():
             })
 
     return jsonify({"message": "Invalid credentials"}), 401
+
+
+# Add this route to link existing reports to clusters
+@app.route("/api/link-reports-to-clusters", methods=["POST"])
+def link_reports_to_clusters():
+    """Link existing reports to their nearest cluster based on distance"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    try:
+        # Get all reports with coordinates
+        reports = cursor.execute("""
+            SELECT report_id, location_lat, location_lon 
+            FROM report 
+            WHERE location_lat IS NOT NULL AND location_lon IS NOT NULL
+        """).fetchall()
+        
+        # Get all clusters
+        clusters = cursor.execute("""
+            SELECT cluster_id, center_lat, center_lon 
+            FROM damage_cluster
+        """).fetchall()
+        
+        if not reports or not clusters:
+            return jsonify({"error": "No reports or clusters found"}), 400
+        
+        linked_count = 0
+        
+        # Link each report to nearest cluster
+        for report in reports:
+            report_id = report["report_id"]
+            report_lat = float(report["location_lat"])
+            report_lon = float(report["location_lon"])
+            
+            nearest_cluster_id = None
+            nearest_distance = float('inf')
+            
+            # Find nearest cluster
+            for cluster in clusters:
+                cluster_id = cluster["cluster_id"]
+                cluster_lat = float(cluster["center_lat"])
+                cluster_lon = float(cluster["center_lon"])
+                
+                distance = haversine(report_lat, report_lon, cluster_lat, cluster_lon)
+                
+                if distance < nearest_distance:
+                    nearest_distance = distance
+                    nearest_cluster_id = cluster_id
+            
+            # Link report to nearest cluster
+            if nearest_cluster_id:
+                cursor.execute("""
+                    UPDATE report 
+                    SET cluster_id = ? 
+                    WHERE report_id = ?
+                """, (nearest_cluster_id, report_id))
+                linked_count += 1
+                print(f"✅ Linked report {report_id} to cluster {nearest_cluster_id} (distance: {nearest_distance:.2f}km)")
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({
+            "message": f"Successfully linked {linked_count} reports to clusters",
+            "linked_count": linked_count
+        }), 200
+        
+    except Exception as e:
+        conn.rollback()
+        conn.close()
+        print(f"❌ Error linking reports: {e}")
+        return jsonify({"error": str(e)}), 500
 
 # ==========================
 # Run server
