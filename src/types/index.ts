@@ -24,6 +24,10 @@ export interface Cluster {
 
 export interface WorkOrder {
   id: string;
+<<<<<<< HEAD
+=======
+  cluster_id?: string;
+>>>>>>> 14eae9dff0458dda7f7c2f8e06f74f050d41c7a7
   priorityLevel: number;
   assignedTeam: string;
   totalReports: number;
