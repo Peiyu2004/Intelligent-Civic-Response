@@ -99,6 +99,7 @@ Municipalities heavily struggle with accurately prioritizing infrastructure repa
 ## 🏗️ System Architecture
 
 The software utilizes a decoupled full-stack web architecture to feed interactive client submissions through a structured AI processing pipeline:
+
 [ User ] 
    │  interacts
    ▼
@@ -136,23 +137,19 @@ The software utilizes a decoupled full-stack web architecture to feed interactiv
 ### 1. Repository Setup
 ```bash
 git clone [https://github.com/Peiyu2004/Intelligent-Civic-Response.git](https://github.com/Peiyu2004/Intelligent-Civic-Response.git)
-cd Intelligent-Civic-Response '''
+cd Intelligent-Civic-Response
 
 ### 2. Backend Initialization (Flask)
 # Install required packages from the root or backend folder
-```bash
 pip install -r requirements.txt
 
 # Run database setup scripts to initialize the SQLite engine schema
-```bash
 python database.py
 
 # Fire up the local Flask server
-```bash
 python app.py
 
 ### 3. Frontend Initialization (React)
 # Move into frontend folder
-```bash
 npm install
 npm start
