@@ -100,23 +100,25 @@ Municipalities heavily struggle with accurately prioritizing infrastructure repa
 
 The software utilizes a decoupled full-stack web architecture to feed interactive client submissions through a structured AI processing pipeline:
 
-[ User ] 
-   │  interacts
-   ▼
-┌──────────────┐
-│ Web Frontend │ (React / TypeScript)
-└──────┬───────┘
-│  makes API requests
-▼
-┌──────────────┐       Analysis Payloads       ┌────────────────┐
-│ Backend App  ├──────────────────────────────►│ FlexToken API  │
-│   (Flask)    │◄──────────────────────────────┤   (AI Core)    │
-└──────┬───────┘        Severity Scores        └────────────────┘
-│
-▼  records results
-┌──────────────┐
-│  Database    │ (SQLite)
-└──────────────┘
+```text
+       [ User ] 
+          │  interacts
+          ▼
+┌──────────────────┐
+│   Web Frontend   │ (React / TypeScript)
+└─────────┬────────┘
+          │  makes API requests
+          ▼
+┌──────────────────┐       Analysis Payloads       ┌────────────────┐
+│   Backend App    ├──────────────────────────────►│  FlexToken API │
+│     (Flask)      │◄──────────────────────────────┤    (AI Core)   │
+└─────────┬────────┘        Severity Scores        └────────────────┘
+          │
+          ▼  records results
+┌──────────────────┐
+│     Database     │ (SQLite)
+└──────────────────┘
+
 
 ### 💻 Technical Stack
 
@@ -136,7 +138,7 @@ The software utilizes a decoupled full-stack web architecture to feed interactiv
 
 ### 1. Repository Setup
 ```bash
-git clone [https://github.com/Peiyu2004/Intelligent-Civic-Response.git](https://github.com/Peiyu2004/Intelligent-Civic-Response.git)
+git clone https://github.com/Peiyu2004/Intelligent-Civic-Response.git
 cd Intelligent-Civic-Response
 
 ### 2. Backend Initialization (Flask)
