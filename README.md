@@ -77,6 +77,17 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ---
 
+## 📱 App Demo
+
+<details>
+  <summary>Click to expand video demo</summary>
+  
+  
+  
+</details>
+
+---
+
 ## 📌 Problem Statement & Gaps
 
 Municipalities heavily struggle with accurately prioritizing infrastructure repairs due to the inefficiencies of handling manual reports. Key systemic challenges include:
@@ -118,7 +129,9 @@ The software utilizes a decoupled full-stack web architecture to feed interactiv
 ┌──────────────────┐
 │     Database     │ (SQLite)
 └──────────────────┘
+```
 
+---
 
 ### 💻 Technical Stack
 
@@ -140,18 +153,27 @@ The software utilizes a decoupled full-stack web architecture to feed interactiv
 ```bash
 git clone https://github.com/Peiyu2004/Intelligent-Civic-Response.git
 cd Intelligent-Civic-Response
+```
 
 ### 2. Backend Initialization (Flask)
 # Install required packages from the root or backend folder
+```bash
 pip install -r requirements.txt
+```
 
 # Run database setup scripts to initialize the SQLite engine schema
+```bash
 python database.py
+```
 
 # Fire up the local Flask server
+```bash
 python app.py
+```
 
 ### 3. Frontend Initialization (React)
 # Move into frontend folder
+```bash
 npm install
 npm start
+```
