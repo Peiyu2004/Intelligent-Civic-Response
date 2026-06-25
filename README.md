@@ -62,7 +62,7 @@ The software utilizes a decoupled full-stack web architecture to feed interactiv
 
 ---
 
-### 💻 Technical Stack
+## 💻 Technical Stack
 
 * **Frontend UI:** React, TypeScript, HTML5, CSS3, Map Rendering via Leaflet (OpenStreetMap)
 * **Backend Application:** Python (Flask)
@@ -85,23 +85,23 @@ cd Intelligent-Civic-Response
 ```
 
 ### 2. Backend Initialization (Flask)
-# Install required packages from the root or backend folder
+#### Install required packages from the root or backend folder
 ```bash
 pip install -r requirements.txt
 ```
 
-# Run database setup scripts to initialize the SQLite engine schema
+#### Run database setup scripts to initialize the SQLite engine schema
 ```bash
 python database.py
 ```
 
-# Fire up the local Flask server
+#### Fire up the local Flask server
 ```bash
 python app.py
 ```
 
 ### 3. Frontend Initialization (React)
-# Move into frontend folder
+#### Move into frontend folder
 ```bash
 npm install
 npm start
